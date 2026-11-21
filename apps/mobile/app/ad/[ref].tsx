@@ -172,7 +172,13 @@ export default function AdScreen() {
         </ScrollView>
       )}
 
-      {ad && ad.status === 'live' && (ad.whatsapp || ad.phone) && (
+      {ad && ad.sample && (
+        <View style={{ margin: spacing.md, padding: spacing.md, borderRadius: radius.md, backgroundColor: '#F0F9FF', borderWidth: 1, borderColor: '#BAE6FD' }}>
+          <AppText bold color="#0C4A6E">{t('browse.sampleTitle')}</AppText>
+          <AppText size={13} color="#0C4A6E">{t('browse.sampleText')}</AppText>
+        </View>
+      )}
+      {ad && ad.status === 'live' && !ad.sample && (ad.whatsapp || ad.phone) && (
         <View style={{ position: 'absolute', left: 0, right: 0, bottom: 0, flexDirection: 'row', gap: spacing.sm, padding: spacing.md, backgroundColor: colors.surface, borderTopWidth: 1, borderTopColor: colors.border }}>
           {ad.whatsapp && (
             <View style={{ flex: 1 }}>

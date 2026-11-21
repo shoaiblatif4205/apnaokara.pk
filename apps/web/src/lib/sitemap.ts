@@ -42,7 +42,7 @@ export function urlset(entries: Entry[]): string {
 }
 
 export async function sitemapIndex(): Promise<string> {
-  const [{ n }] = await q<{ n: number }>(`select count(*)::int as n from listings l where ${LIVE}`);
+  const [{ n }] = await q<{ n: number }>(`select count(*)::int as n from listings l where ${LIVE} and not l.is_sample`);
   const files = ['pages', 'categories', 'blog', ...Array.from({ length: Math.max(1, Math.ceil(n / LISTINGS_PER_FILE)) }, (_, i) => `listings-${i + 1}`)];
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
@@ -102,7 +102,7 @@ export async function listingsSitemap(page: number): Promise<string> {
   const rows = await q<{ slug: string; reference: string; updated_at: Date; cover: string | null }>(
     `select l.slug, l.reference, greatest(l.updated_at, l.approved_at) as updated_at,
             (select storage_path from listing_images i where i.listing_id = l.id and i.deleted_at is null order by i.is_cover desc, i.sort_order limit 1) as cover
-       from listings l where ${LIVE} order by l.approved_at desc, l.id limit ${LISTINGS_PER_FILE} offset ${(page - 1) * LISTINGS_PER_FILE}`,
+       from listings l where ${LIVE} and not l.is_sample order by l.approved_at desc, l.id limit ${LISTINGS_PER_FILE} offset ${(page - 1) * LISTINGS_PER_FILE}`,
   );
   return urlset(
     rows.map((r) => ({ path: `/ad/${r.slug}-${r.reference}`, lastmod: r.updated_at, image: r.cover ? `/api/files/listing-images/${r.cover}` : null })),

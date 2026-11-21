@@ -94,11 +94,13 @@ export async function ListingsView({
   return (
     <div className="container-site py-4">
       <Breadcrumbs items={crumbs} locale={locale} />
-      {top && (
-        <div className="mt-3 h-[120px] md:h-[160px]">
+      <div className="mt-3 h-[110px] md:h-[140px]">
+        {top ? (
           <BannerBox banner={top} locale={locale} sponsoredLabel={sponsoredLabel} />
-        </div>
-      )}
+        ) : (
+          <BannerSlot variant="strip" title={th('brandsTitle')} text={th('brandsText')} cta={th('brandsCta')} sponsoredLabel={sponsoredLabel} />
+        )}
+      </div>
       <header className="mt-3">
         <h1 className="text-2xl font-bold md:text-3xl">{title}</h1>
         <p className="mt-1 text-sm text-ink-muted">{t('adsCount', { count: result.total })}</p>
@@ -159,7 +161,7 @@ export async function ListingsView({
                 feed ? (
                   <BannerBox banner={feed} locale={locale} sponsoredLabel={sponsoredLabel} className="aspect-[3/4]" />
                 ) : (
-                  <BannerSlot title={th('brandsTitle')} cta={th('brandsCta')} sponsoredLabel={sponsoredLabel} />
+                  <BannerSlot variant="card" title={th('brandsTitle')} text={th('brandsText')} cta={th('brandsCta')} sponsoredLabel={sponsoredLabel} />
                 )
               }
             />

@@ -13,7 +13,7 @@ import { ProviderInfo, ProviderReviews } from '@/components/browse/ProviderProfi
 
 // Keys shown in the provider info block instead of the generic details table
 const PROFILE_KEYS = ['experience_years', 'areas_served', 'timings', 'address', 'map_link', 'website', 'starting_rate'];
-import type { AppLocale } from '@/i18n/routing';
+import { Link, type AppLocale } from '@/i18n/routing';
 import { fill, getSeo, ld } from '@/lib/seo';
 
 const site = process.env.NEXT_PUBLIC_SITE_URL || 'https://apnaokara.pk';
@@ -44,7 +44,7 @@ export async function generateMetadata(props: { params: Promise<{ locale: string
     title,
     description,
     alternates: { canonical: `/${locale}${path}`, languages: { en: `/en${path}`, ur: `/ur${path}` } },
-    robots: ad.status === 'live' ? undefined : { index: false, follow: true },
+    robots: ad.status === 'live' && !ad.sample ? undefined : { index: false, follow: true },
     openGraph: {
       type: 'website',
       title,
@@ -205,8 +205,18 @@ export default async function AdPage(props: { params: Promise<{ locale: string; 
 
   return (
     <div className="container-site py-4">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld(jsonLd) }} />
+      {!ad.sample && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld(jsonLd) }} />}
       <Breadcrumbs items={crumbs} locale={locale} />
+
+      {ad.sample && (
+        <div role="status" className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-sky-200 bg-sky-50 p-4">
+          <div>
+            <p className="text-lg font-bold text-sky-900">{t('sampleTitle')}</p>
+            <p className="text-sm text-sky-900">{t('sampleText')}</p>
+          </div>
+          <Link href="/post-ad" className="btn-primary">{t('samplePost')}</Link>
+        </div>
+      )}
 
       {ad.status !== 'live' && (
         <div role="status" className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
@@ -290,7 +300,7 @@ export default async function AdPage(props: { params: Promise<{ locale: string; 
           <section className="card p-4">
             <p className="text-sm text-ink-muted">{t('postedBy')}</p>
             <p className="text-lg font-bold">{ad.sellerName}</p>
-            {ad.status === 'live' && (
+            {ad.status === 'live' && !ad.sample && (
               <div className="mt-4">
                 <ContactButtons phone={ad.phone} whatsapp={ad.whatsapp} waText={t('waMessage', { title: ad.title, url })} labels={labels} />
               </div>

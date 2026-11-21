@@ -78,6 +78,8 @@ export type AdCard = {
   cover: string | null;
   featured: boolean;
   verified: boolean;
+  /** Sample ad shown to new visitors (labelled, no contact). */
+  sample: boolean;
   rating: number;
   ratingCount: number;
   approvedAt: string;
@@ -88,7 +90,7 @@ const CARD_SELECT = `
   select l.id, l.reference, l.slug, l.model::text as model, l.title, l.price, l.price_type, l.custom_fields,
          ci.name_en as city_en, ci.name_ur as city_ur, lo.name_en as loc_en, lo.name_ur as loc_ur,
          c.name_en as cat_en, c.name_ur as cat_ur, c.slug as cat_slug,
-         ${FEATURED} as featured, l.is_verified, l.rating_avg, l.rating_count, l.approved_at,
+         ${FEATURED} as featured, l.is_verified, l.is_sample, l.rating_avg, l.rating_count, l.approved_at,
          (select storage_path from listing_images i where i.listing_id = l.id and i.deleted_at is null
            order by i.is_cover desc, i.sort_order limit 1) as cover
     from listings l
@@ -99,7 +101,7 @@ const CARD_SELECT = `
 type CardRow = {
   id: string; reference: string; slug: string; model: string; title: string; price: number | null; price_type: string;
   custom_fields: Record<string, string | number | boolean>; city_en: string; city_ur: string; loc_en: string | null; loc_ur: string | null;
-  cat_en: string; cat_ur: string; cat_slug: string; featured: boolean; is_verified: boolean; rating_avg: string; rating_count: number;
+  cat_en: string; cat_ur: string; cat_slug: string; featured: boolean; is_verified: boolean; is_sample: boolean; rating_avg: string; rating_count: number;
   approved_at: string; cover: string | null;
 };
 
@@ -118,6 +120,7 @@ function toCard(r: CardRow): AdCard {
     cover: r.cover ? `/api/files/listing-images/${r.cover}` : null,
     featured: r.featured,
     verified: r.is_verified,
+    sample: !!r.is_sample,
     rating: Number(r.rating_avg),
     ratingCount: r.rating_count,
     approvedAt: r.approved_at,

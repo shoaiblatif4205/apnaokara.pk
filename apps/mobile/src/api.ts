@@ -74,6 +74,8 @@ export type AdCard = {
   cover: string | null;
   featured: boolean;
   verified: boolean;
+  /** Sample ad (labelled, no contact) */
+  sample?: boolean;
   rating: number;
   ratingCount: number;
   approvedAt: string;

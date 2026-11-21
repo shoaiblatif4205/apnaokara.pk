@@ -54,17 +54,52 @@ export function BannerBox({
   );
 }
 
-/** Empty slot inviting brands to advertise. */
-export function BannerSlot({ title, cta, sponsoredLabel }: { title: string; cta: string; sponsoredLabel: string }) {
+/**
+ * Our own banner shown in any banner place that no brand has booked yet:
+ * invites businesses to advertise (links to /advertise). Disappears by itself
+ * when a real banner is live in that place.
+ */
+export function BannerSlot({
+  title,
+  cta,
+  sponsoredLabel,
+  text,
+  variant = 'box',
+}: {
+  title: string;
+  cta: string;
+  sponsoredLabel: string;
+  text?: string;
+  variant?: 'slide' | 'box' | 'strip' | 'card';
+}) {
+  const big = variant === 'slide';
+  const wide = variant === 'strip';
   return (
     <Link
       href="/advertise"
-      className="relative flex h-full min-h-[124px] flex-col justify-center rounded-2xl border border-dashed border-accent bg-accent-light p-5 text-orange-900 hover:border-solid"
+      className={`group relative flex h-full overflow-hidden rounded-2xl bg-gradient-to-br from-orange-500 via-orange-600 to-[#9a3412] text-white shadow-sm transition hover:shadow-md ${
+        big ? 'min-h-[260px] flex-col justify-center p-6 md:p-10' : wide ? 'min-h-[110px] items-center gap-4 p-4 md:p-6' : variant === 'card' ? 'aspect-[3/4] flex-col justify-end p-4' : 'min-h-[124px] flex-col justify-center p-4'
+      }`}
     >
-      <span className="absolute end-3 top-2 text-xs text-orange-900/80">{sponsoredLabel}</span>
-      <Megaphone size={22} aria-hidden="true" />
-      <span className="mt-1 text-lg font-bold">{title}</span>
-      <span className="text-sm">{cta}</span>
+      {/* decoration */}
+      <span aria-hidden="true" className="absolute -end-10 -top-10 h-40 w-40 rounded-full bg-white/10" />
+      <span aria-hidden="true" className="absolute -bottom-12 -start-8 h-32 w-32 rounded-full bg-white/10" />
+      <span className="absolute end-3 top-2 rounded bg-white/20 px-1.5 text-[11px] font-semibold">{sponsoredLabel}</span>
+      <span
+        aria-hidden="true"
+        className={`relative flex shrink-0 items-center justify-center rounded-full bg-white text-orange-600 ${big ? 'h-14 w-14' : wide ? 'h-12 w-12' : 'h-10 w-10'} ${variant === 'card' ? 'mb-auto mt-6' : ''}`}
+      >
+        <Megaphone size={big ? 28 : 22} />
+      </span>
+      <span className={`relative ${wide ? 'flex-1' : 'mt-2'}`}>
+        <span className={`block font-extrabold leading-tight ${big ? 'text-3xl md:text-4xl' : wide ? 'text-lg md:text-2xl' : 'text-lg'}`}>{title}</span>
+        {text && (big || wide || variant === 'card') && <span className={`mt-1 block text-white/90 ${big ? 'max-w-lg md:text-lg' : 'text-sm'}`}>{text}</span>}
+      </span>
+      <span
+        className={`relative mt-3 inline-flex w-fit items-center rounded-full bg-white px-4 py-2 text-sm font-bold text-orange-700 group-hover:bg-orange-50 ${wide ? 'mt-0 shrink-0' : ''}`}
+      >
+        {cta}
+      </span>
     </Link>
   );
 }

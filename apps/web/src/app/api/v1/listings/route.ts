@@ -31,7 +31,8 @@ export async function GET(req: NextRequest) {
 
 // POST multipart/form-data: data (JSON), photos (files), screenshot (file, if paid)
 export async function POST(req: NextRequest) {
-  if (rateLimited(`post:${clientIp(req.headers)}`, 10, 60 * 60 * 1000)) {
+  // Spam protection: ads per hour from one connection (LISTING_RATE_LIMIT in Vercel, default 10)
+  if (rateLimited(`post:${clientIp(req.headers)}`, Number(process.env.LISTING_RATE_LIMIT) || 10, 60 * 60 * 1000)) {
     return NextResponse.json({ error: 'rate_limited', message: 'Too many ads from this connection. Try again in an hour.' }, { status: 429 });
   }
   try {

@@ -29,6 +29,9 @@ export async function AdCard({ ad, locale, large = false }: { ad: Ad; locale: 'e
           {ad.featured && (
             <span className="absolute start-2 top-2 rounded-md bg-accent px-2 py-0.5 text-xs font-bold text-white">{tc('featured')}</span>
           )}
+          {ad.sample && (
+            <span className="absolute bottom-2 start-2 rounded-md bg-sky-700 px-2 py-0.5 text-xs font-bold text-white">{t('sampleBadge')}</span>
+          )}
         </div>
         <div className="flex flex-1 flex-col gap-1 p-3">
           {!provider && <p className="text-lg font-extrabold text-ink">{price}</p>}

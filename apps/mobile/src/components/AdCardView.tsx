@@ -64,6 +64,13 @@ export function AdCardView({ ad }: { ad: AdCard }) {
             </AppText>
           </View>
         )}
+        {ad.sample && (
+          <View style={{ position: 'absolute', bottom: 6, left: 6, backgroundColor: '#0369A1', borderRadius: 4, paddingHorizontal: 6 }}>
+            <AppText size={11} bold color="#FFFFFF" align="left">
+              {t('browse.sampleBadge')}
+            </AppText>
+          </View>
+        )}
         <View style={{ position: 'absolute', top: 6, right: 6 }}>
           <FavButton ad={ad} />
         </View>

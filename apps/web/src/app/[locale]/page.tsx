@@ -103,7 +103,12 @@ export default async function HomePage(props: { params: Promise<{ locale: string
       <section className="container-site mt-4 grid gap-3 lg:grid-cols-3" aria-label={th('heroTitle')}>
         <div className="lg:col-span-2">
           <HeroSlider
-            slides={[ourSlide, ...by('hero_slider').map(slideFor)]}
+            slides={[
+              ourSlide,
+              ...(by('hero_slider').length
+                ? by('hero_slider').map(slideFor)
+                : [<BannerSlot key="ad-slide" variant="slide" title={th('brandsTitle')} text={th('brandsText')} cta={th('brandsCta')} sponsoredLabel={sponsored} />]),
+            ]}
             labels={{ prev: t('prev'), next: t('next'), slide: th('heroTitle') }}
           />
         </div>
@@ -112,7 +117,7 @@ export default async function HomePage(props: { params: Promise<{ locale: string
             side[i] ? (
               <BannerBox key={i} banner={side[i]} locale={locale} sponsoredLabel={sponsored} />
             ) : (
-              <BannerSlot key={i} title={th('brandsTitle')} cta={th('brandsCta')} sponsoredLabel={sponsored} />
+              <BannerSlot key={i} variant="box" title={th('brandsTitle')} cta={th('brandsCta')} sponsoredLabel={sponsored} />
             ),
           )}
         </div>
@@ -181,7 +186,7 @@ export default async function HomePage(props: { params: Promise<{ locale: string
         {strip ? (
           <BannerBox banner={strip} locale={locale} sponsoredLabel={sponsored} />
         ) : (
-          <BannerSlot title={th('brandsTitle')} cta={th('brandsText')} sponsoredLabel={sponsored} />
+          <BannerSlot variant="strip" title={th('brandsTitle')} text={th('brandsText')} cta={th('brandsCta')} sponsoredLabel={sponsored} />
         )}
       </section>
     ),
@@ -194,7 +199,13 @@ export default async function HomePage(props: { params: Promise<{ locale: string
             <AdGrid
               ads={fresh}
               locale={locale}
-              sponsor={feed ? <BannerBox banner={feed} locale={locale} sponsoredLabel={sponsored} className="aspect-[3/4]" /> : undefined}
+              sponsor={
+                feed ? (
+                  <BannerBox banner={feed} locale={locale} sponsoredLabel={sponsored} className="aspect-[3/4]" />
+                ) : (
+                  <BannerSlot variant="card" title={th('brandsTitle')} text={th('brandsText')} cta={th('brandsCta')} sponsoredLabel={sponsored} />
+                )
+              }
             />
           ) : (
             <div className="card p-8 text-center text-ink-muted">{th('emptyAds')}</div>
