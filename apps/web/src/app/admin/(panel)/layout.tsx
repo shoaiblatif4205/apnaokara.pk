@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import {
   Activity,
+  Sparkles,
   Bell,
   CalendarClock,
   DatabaseBackup,
@@ -57,6 +58,7 @@ const nav: NavItem[] = [
   { href: '/admin/blocklist', label: 'Blocked numbers', icon: Ban, roles: ['moderator'] },
   { href: '/admin/blog', label: 'Blog', icon: Newspaper, roles: ['blog_writer'] },
   { href: '/admin/pages', label: 'Pages', icon: FileText, roles: ['blog_writer'] },
+  { href: '/admin/samples', label: 'Sample ads', icon: Sparkles, roles: [] },
   { href: '/admin/homepage', label: 'Homepage', icon: House, roles: [] },
   { href: '/admin/categories', label: 'Categories', icon: FolderTree, roles: [] },
   { href: '/admin/locations', label: 'Locations', icon: MapPin, roles: [] },
