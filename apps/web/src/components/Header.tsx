@@ -1,4 +1,4 @@
-import { Download, Heart, Megaphone, Plus, Search } from 'lucide-react';
+import { BookOpen, Download, Heart, Megaphone, Plus, Search } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { isFreeNow, type FreeModeSettings } from '@apna-okara/shared';
 import { Link, type AppLocale } from '@/i18n/routing';
@@ -36,6 +36,10 @@ export async function Header({ locale }: { locale: AppLocale }) {
             <Link href="/advertise" className="inline-flex items-center gap-1 hover:underline">
               <Megaphone size={14} aria-hidden="true" />
               {tc('advertise')}
+            </Link>
+            <Link href="/blog" className="inline-flex items-center gap-1 hover:underline">
+              <BookOpen size={14} aria-hidden="true" />
+              {tc('blog')}
             </Link>
             <Link href="/faq" className="hover:underline">
               {tc('help')}

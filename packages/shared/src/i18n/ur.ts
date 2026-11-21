@@ -4,6 +4,7 @@ import type { Messages } from './en.ts';
 
 export const ur: Messages = {
   common: {
+    blog: 'بلاگ',
     siteName: 'اپنا اوکاڑہ',
     tagline: 'اوکاڑہ، ساہیوال اور پاکپتن کا اپنا بازار',
     postAd: 'اشتہار لگائیں',

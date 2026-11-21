@@ -2,6 +2,7 @@
 
 export const en = {
   common: {
+    blog: 'Blog',
     siteName: 'Apna Okara',
     tagline: 'The local marketplace of Okara, Sahiwal and Pakpattan',
     postAd: 'Post Ad',
