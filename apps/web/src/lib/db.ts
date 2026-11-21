@@ -48,9 +48,21 @@ export function parseDatabaseUrl(raw: string | undefined): { config: DbConfig | 
     }
   }
   if (/YOUR-DATABASE-PASSWORD|APNA-PASSWORD|PUT-YOUR/i.test(password)) notes.push('the password part was not replaced with the real password');
-  const port = Number(m[4] || 5432);
-  if (m[3].includes('pooler.supabase.com') && port !== 6543) notes.push(`port ${port}: the Transaction pooler uses 6543`);
-  return { config: { host: m[3], port, user: decodeURIComponent(m[1]), password, database: m[5] || 'postgres' }, notes };
+  let host = m[3];
+  let port = Number(m[4] || 5432);
+  let user = decodeURIComponent(m[1]);
+  // Supabase "Direct connection" (db.<ref>.supabase.co) is IPv6-only and cannot be reached from Vercel.
+  // Switch it to the Transaction pooler (same password): user postgres.<ref>, port 6543.
+  const direct = host.match(/^db\.([a-z0-9]+)\.supabase\.co$/);
+  const pooler = process.env.SUPABASE_POOLER_HOST;
+  if (direct && pooler) {
+    host = pooler;
+    port = 6543;
+    if (!user.includes('.')) user = `${user}.${direct[1]}`;
+    notes.push('the Direct connection link was switched to the Transaction pooler (fixed)');
+  }
+  if (host.includes('pooler.supabase.com') && port !== 6543) notes.push(`port ${port}: the Transaction pooler uses 6543`);
+  return { config: { host, port, user, password, database: m[5] || 'postgres' }, notes };
 }
 
 function createPool(): Pool {
