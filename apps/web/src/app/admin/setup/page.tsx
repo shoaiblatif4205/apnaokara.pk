@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { q1 } from '@/lib/db';
+import { parseDatabaseUrl, q1 } from '@/lib/db';
 import { pendingMigrations } from '@/lib/migrate';
 import { createFirstAdmin, prepareDatabase } from './actions';
 
@@ -32,11 +32,13 @@ export default async function SetupPage(props: { searchParams: Promise<{ error?:
     dbError = e instanceof Error ? e.message : String(e);
   }
   const db = searchParams.db ?? '';
+  const linkNotes = parseDatabaseUrl(process.env.DATABASE_URL).notes;
   const input = 'mt-1 block min-h-[44px] w-full rounded-lg border border-line bg-white px-3 py-2 text-base';
   return (
     <main className="flex min-h-screen items-center justify-center bg-page p-4">
       <div className="w-full max-w-md space-y-4">
       {searchParams.error && <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-800">{ERRORS[searchParams.error] ?? 'Something went wrong.'}</p>}
+      {linkNotes.length > 0 && <p role="status" className="rounded-lg bg-amber-50 p-3 text-sm text-amber-900">About DATABASE_URL in Vercel: {linkNotes.join('; ')}.</p>}
       {dbError && <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-800">Cannot reach the database: {dbError}. Check DATABASE_URL in Vercel.</p>}
       {db.startsWith('fail:') && <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-800">Database setup stopped: {db.slice(5)}</p>}
       {db.startsWith('ok:') && <p role="status" className="rounded-lg bg-brand-light p-3 text-sm text-brand-dark">Database ready ({db.split(':')[1]} setup files{db.split(':')[2] === '1' ? ' + starting data' : ''}).</p>}
