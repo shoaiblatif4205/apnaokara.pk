@@ -3,7 +3,7 @@ import { requireAdmin } from '@/lib/admin/auth';
 import { SAMPLE_ADS } from '@/lib/samples.data';
 import { Notice, PageHeader, Section } from '@/components/admin/ui';
 import { SubmitButton } from '@/components/admin/SubmitButton';
-import { importSamples, removeSamples } from './actions';
+import { featureSamples, importSamples, removeSamples } from './actions';
 
 export const metadata = { title: 'Sample ads' };
 export const maxDuration = 60;
@@ -11,8 +11,8 @@ export const maxDuration = 60;
 export default async function SamplesPage(props: { searchParams: Promise<{ saved?: string; error?: string }> }) {
   const searchParams = await props.searchParams;
   await requireAdmin([]);
-  const s = await q1<{ live: number; total: number }>(
-    `select count(*) filter (where status = 'approved' and (expires_at is null or expires_at > now()))::int as live, count(*)::int as total from listings where is_sample`,
+  const s = await q1<{ live: number; featured: number; total: number }>(
+    `select count(*) filter (where status = 'approved' and (expires_at is null or expires_at > now()))::int as live, count(*) filter (where status = 'approved' and is_featured)::int as featured, count(*)::int as total from listings where is_sample`,
   );
   const live = s?.live ?? 0;
   return (
@@ -27,6 +27,11 @@ export default async function SamplesPage(props: { searchParams: Promise<{ saved
           {live < SAMPLE_ADS.length && (
             <form action={importSamples}>
               <SubmitButton>{live ? 'Add the next sample ads' : 'Add sample ads'}</SubmitButton>
+            </form>
+          )}
+          {live > 0 && (s?.featured ?? 0) < 8 && (
+            <form action={featureSamples}>
+              <SubmitButton className="btn-outline">Make 8 sample ads featured</SubmitButton>
             </form>
           )}
           {live > 0 && (

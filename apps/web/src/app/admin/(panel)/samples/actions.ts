@@ -83,3 +83,16 @@ export async function removeSamples() {
   revalidatePath('/', 'layout');
   redirect(`/admin/samples?saved=${encodeURIComponent(`Removed ${r?.n ?? 0} sample ads from the site.`)}`);
 }
+
+/** Makes 8 sample ads "Featured" so the Featured section on the home page shows how it looks. */
+export async function featureSamples() {
+  const admin = await requireAdmin([]);
+  const r = await q1<{ n: number }>(
+    `with pick as (select id from listings where is_sample and status = 'approved' and not is_featured order by random() limit 8),
+          u as (update listings l set is_featured = true, featured_until = l.expires_at from pick where l.id = pick.id returning 1)
+     select count(*)::int as n from u`,
+  );
+  await logActivity(admin.id, 'samples.feature', 'listings', null, { featured: r?.n ?? 0 });
+  revalidatePath('/', 'layout');
+  redirect(`/admin/samples?saved=${encodeURIComponent(`Made ${r?.n ?? 0} sample ads featured.`)}`);
+}

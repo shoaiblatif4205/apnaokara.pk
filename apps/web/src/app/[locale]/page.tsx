@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import { unstable_noStore as noStore } from 'next/cache';
-import { BadgeCheck, BookOpen, Heart, Languages, MapPin, MessageCircle, Smartphone, Users } from 'lucide-react';
+import { BadgeCheck, BookOpen, Heart, Languages, MapPin, MessageCircle, Smartphone, Star, Users } from 'lucide-react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link, type AppLocale } from '@/i18n/routing';
 import { CategoryIcon } from '@/components/CategoryIcon';
@@ -167,10 +167,10 @@ export default async function HomePage(props: { params: Promise<{ locale: string
       </section>
     ),
 
-    featured: () =>
-      featured.length ? (
-        <section className="container-site mt-10" aria-labelledby="h-feat">
-          <Header id="h-feat" title={sectionTitle('featured', th('featuredTitle'))} href="/search?featured=1" />
+    featured: () => (
+      <section className="container-site mt-10" aria-labelledby="h-feat">
+        <Header id="h-feat" title={sectionTitle('featured', th('featuredTitle'))} href="/search?featured=1" />
+        {featured.length > 0 && (
           <ul className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4">
             {featured.map((a) => (
               <li key={a.id}>
@@ -178,8 +178,21 @@ export default async function HomePage(props: { params: Promise<{ locale: string
               </li>
             ))}
           </ul>
-        </section>
-      ) : null,
+        )}
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border-2 border-dashed border-amber-400 bg-amber-50 p-4">
+          <div className="flex items-start gap-3">
+            <Star size={28} aria-hidden="true" className="mt-0.5 shrink-0 fill-amber-400 text-amber-500" />
+            <div>
+              <p className="font-bold text-amber-900">{th('featureCtaTitle')}</p>
+              <p className="text-sm text-amber-900/80">{th('featureCtaText')}</p>
+            </div>
+          </div>
+          <Link href="/post-ad" className="btn bg-amber-500 font-bold text-white hover:bg-amber-600">
+            {th('featureCtaButton')}
+          </Link>
+        </div>
+      </section>
+    ),
 
     wide_banner: () => (
       <section className="container-site mt-10 h-[120px] md:h-[160px]">
@@ -254,10 +267,30 @@ export default async function HomePage(props: { params: Promise<{ locale: string
               </Link>
             </div>
           </div>
-          {rishtaPreview.profiles.length > 0 && (
+          {rishtaPreview.profiles.length > 0 ? (
             <div className="mt-5">
               <RishtaPreview profiles={rishtaPreview.profiles.slice(0, 4)} locale={locale} loggedIn={false} total={rishtaPreview.total} />
             </div>
+          ) : (
+            <>
+              <ol className="mt-5 grid gap-3 md:grid-cols-3">
+                {[
+                  { Icon: Users, text: tr('homeStep1') },
+                  { Icon: BadgeCheck, text: tr('homeStep2') },
+                  { Icon: Heart, text: tr('homeStep3') },
+                ].map(({ Icon, text }, i) => (
+                  <li key={i} className="flex items-start gap-3 rounded-xl bg-white p-4 shadow-sm">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-pink-100 text-pink-700">
+                      <Icon size={20} aria-hidden="true" />
+                    </span>
+                    <span className="text-pink-950">
+                      <b className="text-pink-700">{i + 1}.</b> {text}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+              <p className="mt-4 text-sm font-semibold text-pink-800">{tr('homeEmpty')}</p>
+            </>
           )}
         </div>
       </section>
