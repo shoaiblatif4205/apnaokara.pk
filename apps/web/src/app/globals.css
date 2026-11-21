@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-page text-ink antialiased;
+  }
+  /* Urdu: Nastaliq needs more line height */
+  html[lang='ur'] body {
+    @apply font-urdu;
+    line-height: 2;
+  }
+  html[lang='ur'] h1,
+  html[lang='ur'] h2,
+  html[lang='ur'] h3 {
+    line-height: 1.9;
+  }
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand ring-offset-2;
+  }
+}
+
+@layer components {
+  .container-site {
+    @apply mx-auto w-full max-w-site px-4 md:px-6;
+  }
+  .btn {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg px-4 text-sm font-semibold transition-colors;
+  }
+  .btn-primary {
+    @apply btn bg-brand text-white hover:bg-brand-dark;
+  }
+  .btn-accent {
+    @apply btn bg-accent text-white hover:bg-orange-800;
+  }
+  .btn-outline {
+    @apply btn border border-line bg-white text-ink hover:border-brand hover:text-brand;
+  }
+  .card {
+    @apply rounded-xl border border-line bg-white;
+  }
+  .section-title {
+    @apply text-xl font-bold text-ink md:text-2xl;
+  }
+
+  /* ---------- Pages and blog (Markdown) ---------- */
+  .prose-ao {
+    @apply text-base leading-7 text-ink;
+  }
+  .prose-ao h2 {
+    @apply mt-8 scroll-mt-24 text-xl font-bold md:text-2xl;
+  }
+  .prose-ao h3 {
+    @apply mt-6 scroll-mt-24 text-lg font-bold;
+  }
+  .prose-ao p,
+  .prose-ao ul,
+  .prose-ao ol,
+  .prose-ao table,
+  .prose-ao blockquote {
+    @apply mt-3;
+  }
+  .prose-ao ul {
+    @apply list-disc ps-6;
+  }
+  .prose-ao ol {
+    @apply list-decimal ps-6;
+  }
+  .prose-ao li {
+    @apply mt-1;
+  }
+  .prose-ao a {
+    @apply font-semibold text-brand underline;
+  }
+  .prose-ao blockquote {
+    @apply border-s-4 border-brand bg-brand-light/40 p-3;
+  }
+  .prose-ao table {
+    @apply block w-full overflow-x-auto border-collapse text-sm;
+  }
+  .prose-ao th,
+  .prose-ao td {
+    @apply border border-line px-3 py-2 text-start;
+  }
+  .prose-ao img {
+    @apply mt-4 rounded-xl;
+  }
+  html[lang='ur'] .prose-ao {
+    line-height: 2.2;
+  }
+
+  /* ---------- Admin panel ---------- */
+  .admin-input {
+    @apply block min-h-[40px] w-full rounded-lg border border-line bg-white px-3 py-2 text-sm text-ink focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30;
+  }
+  .admin-input-ur {
+    @apply admin-input font-urdu leading-[2];
+  }
+  .admin-label {
+    @apply block text-xs font-semibold uppercase tracking-wide text-ink-muted;
+  }
+  .btn-sm {
+    @apply inline-flex min-h-[36px] items-center justify-center gap-1 rounded-lg px-3 text-sm font-semibold transition-colors;
+  }
+  .btn-danger {
+    @apply btn-sm border border-red-200 bg-white text-red-700 hover:bg-red-50;
+  }
+  .admin-table {
+    @apply w-full border-collapse text-sm;
+  }
+  .admin-table th {
+    @apply border-b border-line bg-page px-3 py-2 text-start text-xs font-semibold uppercase tracking-wide text-ink-muted;
+  }
+  .admin-table td {
+    @apply border-b border-line px-3 py-2 align-middle;
+  }
+}

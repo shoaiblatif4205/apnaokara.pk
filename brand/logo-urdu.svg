@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 72" width="300" height="72">
+  <title>اپنا اوکاڑہ</title>
+  <g transform="translate(248 12)">
+    <path d="M24 3C15.2 3 8 10 8 18.8 8 30.5 24 45 24 45s16-14.5 16-26.2C40 10 32.8 3 24 3z" fill="#15803D"/>
+    <circle cx="24" cy="19" r="9" fill="#FFFFFF"/>
+    <path d="M19 21.5h10l-1.2 4h-7.6z" fill="#F97316"/>
+    <path d="M20.5 21.5c0-3 1.6-5.5 3.5-5.5s3.5 2.5 3.5 5.5" fill="none" stroke="#F97316" stroke-width="1.8"/>
+  </g>
+  <text x="244" y="46" text-anchor="end" direction="rtl" font-family="'Noto Nastaliq Urdu', 'Jameel Noori Nastaleeq', serif" font-size="30" font-weight="700" fill="#15803D">اپنا اوکاڑہ</text>
+</svg>
