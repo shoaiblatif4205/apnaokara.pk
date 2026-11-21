@@ -22,6 +22,7 @@ export default function RishtaScreen() {
   const { t, locale } = useI18n();
   const [ready, setReady] = useState(false);
   const [logged, setLogged] = useState(false);
+  const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
   const [devCode, setDevCode] = useState('');
@@ -85,13 +86,15 @@ export default function RishtaScreen() {
             <AppText color={colors.textMuted} style={{ marginVertical: spacing.sm }}>{t('rishta.privacy1')}</AppText>
             {!codeSent ? (
               <>
+                <Input label={t('rishta.email')} value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" autoComplete="email" placeholder="name@gmail.com" ltr />
                 <Input label={t('rishta.phone')} value={phone} onChangeText={setPhone} keyboardType="phone-pad" placeholder="03001234567" ltr />
+                <AppText size={12} color={colors.textMuted} style={{ marginBottom: spacing.sm }}>{t('rishta.phoneHint')}</AppText>
                 <Button
                   label={t('rishta.sendCode')}
                   onPress={async () => {
                     setError('');
                     try {
-                      const r = await rishta<{ devCode?: string }>('/api/rishta/auth', { action: 'send', phone });
+                      const r = await rishta<{ devCode?: string }>('/api/rishta/auth', { action: 'send', email: email.trim(), phone, locale });
                       setDevCode(r.devCode ?? '');
                       setCodeSent(true);
                     } catch (e) {
@@ -102,7 +105,7 @@ export default function RishtaScreen() {
               </>
             ) : (
               <>
-                <AppText size={14}>{t('rishta.codeSent')}</AppText>
+                <AppText size={14}>{t('rishta.codeSentEmail', { email: email.trim() })}</AppText>
                 {devCode ? <AppText size={13} color="#92400E">{t('rishta.devCode').replace('{code}', devCode)}</AppText> : null}
                 <Input label={t('rishta.code')} value={code} onChangeText={setCode} keyboardType="number-pad" maxLength={6} ltr />
                 <Button
@@ -110,7 +113,7 @@ export default function RishtaScreen() {
                   onPress={async () => {
                     setError('');
                     try {
-                      const r = await rishta<{ token: string }>('/api/rishta/auth', { action: 'verify', phone, code });
+                      const r = await rishta<{ token: string }>('/api/rishta/auth', { action: 'verify', email: email.trim(), phone, code });
                       await setToken(r.token);
                       linkRishta().catch(() => {});
                       setLogged(true);

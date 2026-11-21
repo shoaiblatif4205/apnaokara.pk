@@ -5,19 +5,19 @@ import { fail, noStore } from '@/lib/rishta/api';
 
 export const dynamic = 'force-dynamic';
 
-// POST { action: 'send', phone }            -> sends code (local: returns devCode)
-// POST { action: 'verify', phone, code }    -> logs in (cookie + token for the app)
+// POST { action: 'send', email, phone, locale }  -> code sent to the email (local without Brevo: returns devCode)
+// POST { action: 'verify', email, phone, code }  -> logs in (cookie + token for the app)
 // POST { action: 'logout' }
 export async function POST(req: NextRequest) {
   try {
     const b = (await req.json().catch(() => ({}))) as Record<string, string>;
     if (b.action === 'send') {
       if (rateLimited(`otp:${clientIp(req.headers)}`, 10, 60 * 60 * 1000)) return NextResponse.json({ message: 'Too many tries. Try later.' }, { status: 429 });
-      return NextResponse.json(await requestOtp(b.phone ?? ''), { headers: noStore });
+      return NextResponse.json(await requestOtp(b.email ?? '', b.phone ?? '', b.locale === 'en' ? 'en' : 'ur'), { headers: noStore });
     }
     if (b.action === 'verify') {
       if (rateLimited(`otpv:${clientIp(req.headers)}`, 20, 60 * 60 * 1000)) return NextResponse.json({ message: 'Too many tries. Try later.' }, { status: 429 });
-      const { account, token } = await verifyOtp(b.phone ?? '', b.code ?? '');
+      const { account, token } = await verifyOtp(b.email ?? '', b.phone ?? '', b.code ?? '');
       await setRishtaCookie(token);
       return NextResponse.json({ token, phone: account.phone }, { headers: noStore });
     }

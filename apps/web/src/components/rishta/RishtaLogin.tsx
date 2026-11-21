@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 
 export function RishtaLogin({ locale, submitLabel }: { locale: 'en' | 'ur'; submitLabel?: string }) {
   const t = useTranslations('rishta');
+  const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
   const [step, setStep] = useState<'phone' | 'code'>('phone');
@@ -35,34 +36,44 @@ export function RishtaLogin({ locale, submitLabel }: { locale: 'en' | 'ur'; subm
       onSubmit={async (e) => {
         e.preventDefault();
         if (step === 'phone') {
-          const j = await post({ action: 'send', phone });
+          const j = await post({ action: 'send', email, phone, locale });
           if (j) {
             setDevCode(j.devCode ?? '');
             setStep('code');
           }
         } else {
-          const j = await post({ action: 'verify', phone, code });
+          const j = await post({ action: 'verify', email, phone, code });
           if (j) window.location.href = `/${locale}/rishta/me`;
         }
       }}
     >
       {step === 'phone' ? (
-        <div>
-          <label htmlFor="r-phone" className="block text-sm font-semibold">
-            {t('phone')}
-          </label>
-          <input id="r-phone" type="tel" dir="ltr" inputMode="tel" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="03001234567" required className={input} />
+        <div className="space-y-4">
+          <div>
+            <label htmlFor="r-email" className="block text-sm font-semibold">
+              {t('email')}
+            </label>
+            <input id="r-email" type="email" dir="ltr" inputMode="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="name@gmail.com" required className={input} />
+            <p className="mt-1 text-xs text-ink-muted">{t('emailHint')}</p>
+          </div>
+          <div>
+            <label htmlFor="r-phone" className="block text-sm font-semibold">
+              {t('phone')}
+            </label>
+            <input id="r-phone" type="tel" dir="ltr" inputMode="tel" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="03001234567" required className={input} />
+            <p className="mt-1 text-xs text-ink-muted">{t('phoneHint')}</p>
+          </div>
         </div>
       ) : (
         <div>
-          <p className="text-sm text-ink-muted">{t('codeSent')}</p>
+          <p className="text-sm text-ink-muted">{t('codeSentEmail', { email })}</p>
           {devCode && <p className="mt-2 rounded-lg bg-amber-50 p-2 text-sm text-amber-900">{t('devCode', { code: devCode })}</p>}
           <label htmlFor="r-code" className="mt-3 block text-sm font-semibold">
             {t('code')}
           </label>
           <input id="r-code" dir="ltr" inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))} required className={`${input} tracking-[0.4em]`} />
           <button type="button" className="mt-2 text-sm text-brand underline" onClick={() => setStep('phone')}>
-            {t('changeNumber')}
+            {t('changeEmail')}
           </button>
         </div>
       )}
