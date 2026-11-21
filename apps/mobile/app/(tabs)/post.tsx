@@ -499,7 +499,7 @@ ${t('post.manageKey')}: ${manageKey} (${t('post.keepPrivate')})` : ''}`)}`)}
               {durations.map((d) => (
                 <Chip
                   key={d.days}
-                  label={d.days === 60 && isProviderModel(category.model) ? t('post.twoMonths') : `${d.days} ${t('post.days')}`}
+                  label={isProviderModel(category.model) ? t('post.twoMonths') : `${d.days} ${t('post.days')}`}
                   sub={free ? t('post.priceFree') : d.price !== null ? formatPrice(d.price, locale) : '-'}
                   active={durationDays === d.days}
                   onPress={() => setDurationDays(d.days)}

@@ -1,5 +1,5 @@
 import type { PoolClient } from 'pg';
-import { durationsFor, isFreeNow, priceFor, type FreeModeSettings, type PriceRow } from '@apna-okara/shared';
+import { durationsFor, isFreeNow, isProviderModel, priceFor, type FreeModeSettings, type PriceRow } from '@apna-okara/shared';
 import { q, q1 } from '@/lib/db';
 import { UserError } from '@/lib/errors';
 
@@ -68,7 +68,7 @@ export async function quoteAd(opts: {
     if (!durationsFor(opts.model).includes(days)) throw new UserError('plan', 'Choose a valid duration');
     const p = priceFor(opts.pricing, opts.model, opts.categoryId, days);
     if (p === null) throw new UserError('plan', 'This plan is not available');
-    items.push({ key: 'plan', label: `${days} days`, amount: p });
+    items.push({ key: 'plan', label: isProviderModel(opts.model) ? 'One-time listing fee' : `${days} days`, amount: p });
   }
   const addons = await getAddons();
   if (opts.featured) {

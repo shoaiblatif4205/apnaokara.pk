@@ -19,7 +19,7 @@ export default async function SamplesPage(props: { searchParams: Promise<{ saved
     <>
       <PageHeader
         title="Sample ads"
-        description="Example ads so new visitors see a lively site. Each one shows a blue “Sample ad” label, has no call / WhatsApp buttons, is hidden from Google, and ends by itself after 30 days (services and businesses 60). Photos: Pexels (free to use)."
+        description="Example ads so new visitors see a lively site. Each one shows a blue “Sample ad” label, has no call / WhatsApp buttons, is hidden from Google, and ends by itself after 30 days. Photos: Pexels (free to use)."
       />
       <Notice saved={searchParams.saved} error={searchParams.error} />
       <Section title={`On the site now: ${live} of ${SAMPLE_ADS.length}`}>

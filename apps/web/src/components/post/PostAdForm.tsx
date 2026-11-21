@@ -590,7 +590,7 @@ export function PostAdForm({ meta, locale, initialModel, initialReferral, commun
                     className={`${choice(durationDays === d.days)} flex-col py-3`}
                     onClick={() => setDurationDays(d.days)}
                   >
-                    <span>{d.days === 60 && isProviderModel(category.model) ? t('twoMonths') : `${d.days} ${t('days')}`}</span>
+                    <span>{isProviderModel(category.model) ? t('twoMonths') : `${d.days} ${t('days')}`}</span>
                     <span className="text-xs font-normal">{free ? t('priceFree') : d.price !== null ? formatPrice(d.price, locale) : '-'}</span>
                   </button>
                 ))}

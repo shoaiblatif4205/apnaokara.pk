@@ -70,7 +70,7 @@ for (const model of ['buy_sell', 'vehicles', 'property', 'jobs']) {
 }
 for (const model of ['services', 'business']) {
   out.push(
-    `insert into pricing (model, duration_days, price) values (${q(model)}, ${PROVIDER_PLAN.days}, ${PROVIDER_PLAN.price});`,
+    `insert into pricing (model, duration_days, price) values (${q(model)}, ${PROVIDER_PLAN.days}, ${PROVIDER_PLAN.prices[model]});`,
   );
 }
 Object.values(ADDONS).forEach((a) => {
@@ -85,7 +85,7 @@ const settings: Record<string, unknown> = {
     enabled: false,
     starts_at: null,
     ends_at: null,
-    days_by_model: { buy_sell: 30, vehicles: 30, property: 30, jobs: 30, services: 60, business: 60 },
+    days_by_model: { buy_sell: 30, vehicles: 30, property: 30, jobs: 30, services: 3650, business: 3650 },
     models: ['buy_sell', 'vehicles', 'property', 'jobs', 'services', 'business'],
     category_slugs: null,
     max_free_ads_per_phone: 3,

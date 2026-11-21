@@ -39,7 +39,7 @@ export async function importSamples() {
       if (!res.ok) throw new Error(`photo ${res.status}`);
       const img = await processPhoto(Buffer.from(await res.arrayBuffer()));
       const provider = cat.model === 'services' || cat.model === 'business';
-      const days = provider ? 60 : 30;
+      const days = 30; // samples always end after 30 days
       await tx(async (c) => {
         const ins = await c.query<{ id: string }>(
           `insert into listings (model, category_id, subcategory_id, slug, title, description, price, price_type, city_id, custom_fields,

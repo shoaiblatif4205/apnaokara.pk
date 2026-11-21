@@ -33,7 +33,7 @@ export async function GET() {
     `- Areas served: ${cities.map((c) => c.name_en).join(', ')} (Okara, Sahiwal and Pakpattan districts).`,
     `- Live ads right now: about ${live}.`,
     '- Posting an ad needs only a phone number (no account). The seller gets a reference number like AO-10001 to manage the ad.',
-    `- Ad prices (buy & sell, vehicles, property, jobs): ${adPrices}. Service providers and businesses: Rs ${price('services', PROVIDER_PLAN.days) ?? PROVIDER_PLAN.price} for 2 months. Sometimes ads are free during offers.`,
+    `- Ad prices (buy & sell, vehicles, property, jobs): ${adPrices}. Service providers: one-time Rs ${price('services', PROVIDER_PLAN.days) ?? PROVIDER_PLAN.prices.services}; businesses: one-time Rs ${price('business', PROVIDER_PLAN.days) ?? PROVIDER_PLAN.prices.business} (no renewal). Sometimes ads are free during offers.`,
     '- Payment: JazzCash, Easypaisa or bank transfer, checked by the team.',
     '- Buyers contact sellers directly on WhatsApp or phone. Apna Okara does not sell items itself.',
     '- Rishta: private. Names and phone numbers are never public; contact is shared only when both families agree.',

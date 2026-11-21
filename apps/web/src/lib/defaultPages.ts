@@ -91,7 +91,7 @@ Call or WhatsApp **0307 2849373**, or email **apnaokarapk@gmail.com**. You can a
 3. Meet in a public place, check the item, then pay.
 
 ## Service providers and businesses
-List your service or business for 2 months. Customers can call you, message you on WhatsApp and leave reviews. A **Verified** badge is given after our team checks you.
+List your service (one-time Rs 1,000) or business (one-time Rs 2,000): no monthly fee, no renewal. Customers can call you, message you on WhatsApp and leave reviews. A **Verified** badge is given after our team checks you.
 
 ## Rishta
 Make a private profile with your phone number. Our team calls to verify it. Families send interest, and numbers are shared only when both say yes.`,
@@ -108,7 +108,7 @@ Make a private profile with your phone number. Our team calls to verify it. Fami
 3. عوامی جگہ پر ملیں، چیز دیکھیں، پھر ادائیگی کریں۔
 
 ## کاریگر اور کاروبار
-اپنی سروس یا کاروبار 2 مہینے کے لیے لسٹ کریں۔ گاہک آپ کو کال یا واٹس ایپ کر سکتے ہیں اور تبصرے لکھ سکتے ہیں۔ ہماری ٹیم کی تصدیق کے بعد **تصدیق شدہ** نشان ملتا ہے۔
+اپنی سروس (ایک بار 1,000 روپے) یا کاروبار (ایک بار 2,000 روپے) لسٹ کریں: نہ ماہانہ فیس، نہ دوبارہ لگانے کی ضرورت۔ گاہک آپ کو کال یا واٹس ایپ کر سکتے ہیں اور تبصرے لکھ سکتے ہیں۔ ہماری ٹیم کی تصدیق کے بعد **تصدیق شدہ** نشان ملتا ہے۔
 
 ## رشتہ
 اپنے فون نمبر سے نجی پروفائل بنائیں۔ ہماری ٹیم تصدیق کے لیے کال کرتی ہے۔ خاندان دلچسپی بھیجتے ہیں، اور نمبر صرف دونوں کی ہاں کے بعد ملتا ہے۔`,
@@ -124,7 +124,7 @@ It is for Okara, Sahiwal and Pakpattan districts, including Renala Khurd, Depalp
 No. You only need a phone number. After posting you get a reference number to manage your ad.
 
 ### How much does an ad cost?
-Ads start from Rs 150 for 7 days. Service providers and businesses pay Rs 500 for 2 months. See the Pricing page. Sometimes ads are free during offers.
+Ads start from Rs 150 for 7 days. Service providers pay a one-time Rs 1,000 and businesses a one-time Rs 2,000. See the Pricing page. Sometimes ads are free during offers.
 
 ### How long does approval take?
 Usually the same day. You can check the status in My Ads with your reference number and phone.
@@ -147,7 +147,7 @@ Yes. Names and numbers are never shown, photos are blurred, and numbers are shar
 نہیں۔ صرف فون نمبر چاہیے۔ اشتہار لگانے کے بعد ریفرنس نمبر ملتا ہے جس سے آپ اشتہار سنبھال سکتے ہیں۔
 
 ### اشتہار کی قیمت کتنی ہے؟
-اشتہار 7 دن کے لیے 150 روپے سے شروع ہیں۔ کاریگر اور کاروبار 2 مہینے کے 500 روپے دیتے ہیں۔ قیمتوں کا صفحہ دیکھیں۔ آفر کے دنوں میں اشتہار مفت بھی ہوتے ہیں۔
+اشتہار 7 دن کے لیے 150 روپے سے شروع ہیں۔ کاریگر ایک بار 1,000 روپے اور کاروبار ایک بار 2,000 روپے دیتے ہیں۔ قیمتوں کا صفحہ دیکھیں۔ آفر کے دنوں میں اشتہار مفت بھی ہوتے ہیں۔
 
 ### منظوری میں کتنا وقت لگتا ہے؟
 عام طور پر اسی دن۔ ریفرنس نمبر اور فون سے میرے اشتہار میں اسٹیٹس دیکھیں۔

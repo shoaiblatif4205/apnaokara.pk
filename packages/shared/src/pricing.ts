@@ -14,8 +14,11 @@ export const DEFAULT_AD_PRICES: Record<AdDuration, number> = {
   30: 450,
 };
 
-/** Service providers and business listings: Rs 500 for 2 months. */
-export const PROVIDER_PLAN = { days: 60, price: 500 };
+/**
+ * Service providers and business listings: ONE-TIME fee, no renewal
+ * (listing runs for 10 years). Business Rs 2,000, service providers Rs 1,000.
+ */
+export const PROVIDER_PLAN = { days: 3650, price: 1000, prices: { services: 1000, business: 2000 } as Record<string, number> };
 
 export const ADDONS = {
   featured: { key: 'featured', price: 200, name: { en: 'Featured', ur: 'فیچرڈ' } },

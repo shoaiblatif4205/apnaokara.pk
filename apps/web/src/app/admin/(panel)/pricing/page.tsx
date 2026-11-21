@@ -71,7 +71,7 @@ export default async function PricingPage(props: { searchParams: Promise<{ saved
             </div>
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               {['services', 'business'].map((m) => (
-                <Field key={m} label={`${m === 'services' ? 'Service providers' : 'Businesses'}: 2 months`} htmlFor={`p_${m}_${PROVIDER_PLAN.days}`}>
+                <Field key={m} label={`${m === 'services' ? 'Service providers' : 'Businesses'}: one-time fee (no renewal)`} htmlFor={`p_${m}_${PROVIDER_PLAN.days}`}>
                   <input id={`p_${m}_${PROVIDER_PLAN.days}`} name={`p_${m}_${PROVIDER_PLAN.days}`} type="number" min={0} defaultValue={def(m, PROVIDER_PLAN.days)} className="admin-input" />
                 </Field>
               ))}

@@ -13,7 +13,7 @@ const DEFAULTS: FreeModeSettings = {
   enabled: false,
   starts_at: null,
   ends_at: null,
-  days_by_model: { buy_sell: 30, vehicles: 30, property: 30, jobs: 30, services: 60, business: 60 },
+  days_by_model: { buy_sell: 30, vehicles: 30, property: 30, jobs: 30, services: 3650, business: 3650 },
   models: ['buy_sell', 'vehicles', 'property', 'jobs', 'services', 'business'],
   category_slugs: null,
   max_free_ads_per_phone: 3,

@@ -348,8 +348,8 @@ Only these areas are selectable. No other city can be chosen.
 | 2 | **Vehicles** | Anyone | Per duration | Auto-expire |
 | 3 | **Property** (Sale / Rent) | Owners, dealers | Per duration | Auto-expire |
 | 4 | **Jobs** | Employers and job seekers | Per duration | Auto-expire |
-| 5 | **Service Providers** | Plumbers, electricians, tutors, etc. | Rs 500 / 2 months | Auto-expire, renewable |
-| 6 | **Business Listings** | Shops, clinics, restaurants, etc. | Rs 500 / 2 months | Auto-expire, renewable |
+| 5 | **Service Providers** | Plumbers, electricians, tutors, etc. | Rs 1,000 one-time | Stays listed, no renewal fee |
+| 6 | **Business Listings** | Shops, clinics, restaurants, etc. | Rs 2,000 one-time | Stays listed, no renewal fee |
 
 Models 5 and 6 have **profiles with ratings and reviews**.
 
@@ -467,7 +467,8 @@ Post Ad → Fill details + photos → Choose duration and add-ons → See paymen
 
 | Plan | Price |
 |---|---|
-| 2 months | Rs 500 |
+| Service provider (one-time, no renewal) | Rs 1,000 |
+| Business listing (one-time, no renewal) | Rs 2,000 |
 
 ### Add-ons
 
@@ -1047,7 +1048,7 @@ The phases below are only the **build order**: what is built first because later
 
 ### Phase 6: Payments, Pricing & Free Mode
 - **Web + App:** payment step: payment details, method, screenshot upload, Transaction ID, amount
-- Durations 7 / 10 / 15 / 20 / 25 / 30 days, Rs 500 / 2 months, Featured +Rs 200, WhatsApp Boost +Rs 200
+- Durations 7 / 10 / 15 / 20 / 25 / 30 days, providers Rs 1,000 / businesses Rs 2,000 one-time, Featured +Rs 200, WhatsApp Boost +Rs 200
 - Featured ads on top of lists and homepage, Featured badge
 - Renew expired ads with payment
 - Promo / discount codes
