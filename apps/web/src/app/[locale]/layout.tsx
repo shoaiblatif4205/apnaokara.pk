@@ -22,9 +22,8 @@ const urdu = Noto_Nastaliq_Urdu({
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://apnaokara.pk';
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
+// Every page is built when it is opened (fresh ads, prices and settings; the build never needs the database).
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(props: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const params = await props.params;

@@ -7,11 +7,20 @@ import { Pool, type PoolClient } from 'pg';
 const globalForPg = globalThis as unknown as { pgPool?: Pool };
 
 function createPool(): Pool {
-  const connectionString = process.env.DATABASE_URL;
+  // sslmode in the link would override the ssl option below, so it is removed (encryption is still on)
+  const connectionString = process.env.DATABASE_URL?.replace(/([?&])sslmode=[^&]*(&|$)/, (_m, p: string, s: string) => (s ? p : '')).replace(/\?$/, '');
   if (!connectionString) {
     throw new Error('DATABASE_URL is not set. Add it to apps/web/.env.local and run npm run db:start.');
   }
-  return new Pool({ connectionString, max: 5 });
+  // Supabase requires an encrypted connection; Vercel runs many small copies, so keep few connections each
+  const remote = !/@(localhost|127.0.0.1)[:/]/.test(connectionString);
+  return new Pool({
+    connectionString,
+    max: process.env.VERCEL ? 3 : 5,
+    idleTimeoutMillis: 10_000,
+    connectionTimeoutMillis: 10_000,
+    ssl: remote ? { rejectUnauthorized: false } : undefined,
+  });
 }
 
 export function getPool(): Pool {

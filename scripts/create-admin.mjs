@@ -39,7 +39,7 @@ try {
     await client.query('update auth.users set encrypted_password = $1 where id = $2', [hash, id]);
   } else {
     const ins = await client.query(
-      'insert into auth.users (email, encrypted_password) values ($1, $2) returning id',
+      'insert into auth.users (id, email, encrypted_password) values (gen_random_uuid(), $1, $2) returning id',
       [email, hash],
     );
     id = ins.rows[0].id;

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getAdmin } from '@/lib/admin/auth';
-import { PUBLIC_BUCKETS, readObject, type Bucket } from '@/lib/storage';
+import { directPublicUrl, PUBLIC_BUCKETS, readObject, type Bucket } from '@/lib/storage';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,6 +23,10 @@ export async function GET(_req: Request, props: { params: Promise<{ bucket: stri
     if (!allowed) return new NextResponse('Not found', { status: 404 });
   }
   if (!/^[\w./-]+$/.test(key) || key.includes('..')) return new NextResponse('Not found', { status: 404 });
+
+  // Live site: public photos come straight from Supabase's file server (fast, and not counted against Vercel)
+  const direct = isPublic ? directPublicUrl(bucket, key) : null;
+  if (direct) return NextResponse.redirect(direct, { status: 308, headers: { 'Cache-Control': 'public, max-age=31536000, immutable' } });
 
   const data = await readObject(bucket, key);
   if (!data) return new NextResponse('Not found', { status: 404 });

@@ -4,7 +4,8 @@ import { exportableTables } from '@/lib/admin/exportTables';
 import { KEEP_BACKUPS } from '@/lib/backup';
 import { Badge, Notice, PageHeader, Section } from '@/components/admin/ui';
 import { SubmitButton } from '@/components/admin/SubmitButton';
-import { backupNow } from './actions';
+import { pendingMigrations } from '@/lib/migrate';
+import { backupNow, runDatabaseUpdates } from './actions';
 
 export const metadata = { title: 'Backups & export' };
 
@@ -26,6 +27,7 @@ export default async function BackupsPage(props: { searchParams: Promise<{ saved
     ),
     exportableTables(),
   ]);
+  const pending = await pendingMigrations().catch(() => [] as string[]);
   const grouped = GROUPS.map(([name, re]) => [name, tables.filter((t) => re.test(t.name))] as const);
   const other = tables.filter((t) => !GROUPS.some(([, re]) => re.test(t.name)));
 
@@ -41,6 +43,14 @@ export default async function BackupsPage(props: { searchParams: Promise<{ saved
         }
       />
       <Notice saved={searchParams.saved} error={searchParams.error} />
+      {pending.length > 0 && (
+        <form action={runDatabaseUpdates} className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">
+          <span>
+            <b>{pending.length} database update(s)</b> came with the latest website version. Make a backup first, then apply them.
+          </span>
+          <SubmitButton confirm="Apply the database updates now?">Run database updates</SubmitButton>
+        </form>
+      )}
 
       <Section title="Backups">
         {backups.length === 0 ? (

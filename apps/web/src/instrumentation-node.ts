@@ -4,7 +4,8 @@ import { sendQueued } from './lib/push';
 // Node.js only (loaded from instrumentation.ts). Local development and
 // any always-on server: hourly jobs (expiry, reminders, daily backup) and
 // sending queued push messages every minute.
-if (process.env.DATABASE_URL && process.env.DISABLE_JOBS !== '1') {
+// Not on Vercel: there the daily Vercel Cron calls /api/cron instead.
+if (process.env.DATABASE_URL && process.env.DISABLE_JOBS !== '1' && !process.env.VERCEL) {
   const hourly = () => {
     runJobs().then((r) => {
       const busy = Object.entries(r).filter(([, v]) => v && (typeof v !== 'object' || Object.values(v as object).some(Boolean)));

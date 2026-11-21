@@ -99,13 +99,13 @@ const settings: Record<string, unknown> = {
     jazzcash: { title: 'Shagufta Latif', number: '0307 2849373' },
     easypaisa: { title: 'Shagufta Latif', number: '0307 2849373' },
     nayapay: { title: 'Shagufta Latif', number: '0307 2849373' },
-    bank: { bank_name: null, title: null, account: null, iban: null },
+    bank: { bank_name: 'Meezan Bank', title: 'Shoaib Latif', account: '29020110227425', iban: null },
   },
   'public.offer_bar': { enabled: false, en: '', ur: '' },
   'public.app_links': { play_store: null, app_store: null },
 };
 for (const [key, value] of Object.entries(settings)) {
-  out.push(`insert into site_settings (key, value) values (${q(key)}, ${j(value)});`);
+  out.push(`insert into site_settings (key, value) values (${q(key)}, ${j(value)}) on conflict (key) do update set value = excluded.value;`);
 }
 
 // ---- Home page sections (order and on/off managed in admin) ----

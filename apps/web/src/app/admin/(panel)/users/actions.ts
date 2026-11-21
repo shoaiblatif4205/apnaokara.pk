@@ -29,7 +29,7 @@ export async function createAdminUser(fd: FormData) {
 
   const hash = await bcrypt.hash(password, 10);
   const id = await tx(async (c) => {
-    const u = await c.query<{ id: string }>('insert into auth.users (email, encrypted_password) values ($1, $2) returning id', [email, hash]);
+    const u = await c.query<{ id: string }>('insert into auth.users (id, email, encrypted_password) values (gen_random_uuid(), $1, $2) returning id', [email, hash]);
     await c.query('insert into admin_users (id, full_name, role) values ($1, $2, $3)', [u.rows[0].id, fullName, role]);
     return u.rows[0].id;
   });

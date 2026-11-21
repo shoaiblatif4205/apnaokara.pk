@@ -92,7 +92,7 @@ export async function verifyOtp(phoneInput: string, code: string): Promise<{ acc
       return { id: found.rows[0].id, phone };
     }
     let user = (await c.query<{ id: string }>('select id from auth.users where phone = $1', [phone])).rows[0];
-    if (!user) user = (await c.query<{ id: string }>('insert into auth.users (phone) values ($1) returning id', [phone])).rows[0];
+    if (!user) user = (await c.query<{ id: string }>('insert into auth.users (id, phone) values (gen_random_uuid(), $1) returning id', [phone])).rows[0];
     await c.query('insert into rishta_accounts (id, phone) values ($1, $2)', [user.id, phone]);
     return { id: user.id, phone };
   });
