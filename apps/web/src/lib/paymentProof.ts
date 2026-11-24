@@ -97,6 +97,7 @@ export async function assertNewPayment(
   const n = Number(opts.fileTime);
   const fileTime = Number.isFinite(n) && n > Date.UTC(2020, 0, 1) && n < now + 86_400_000 ? new Date(n) : null;
 
+  // Saving what was read must never stop a payment (e.g. before the database update has run)
   await q(
     `insert into payment_receipts (screenshot_hash, paid_at, has_time, amount, transaction_id, file_time, ocr_text, read_ok)
      values ($1, $2, $3, $4, $5, $6, $7, $8)
@@ -104,11 +105,12 @@ export async function assertNewPayment(
        transaction_id = excluded.transaction_id, file_time = excluded.file_time, ocr_text = excluded.ocr_text,
        read_ok = excluded.read_ok, created_at = now()`,
     [hash, info.paidAt, info.hasTime, info.amount, info.transactionId, fileTime, info.text || null, !!(info.paidAt || info.amount || info.transactionId)],
-  );
+  ).catch((e) => console.error('could not save receipt info', e));
   return info;
 }
 
 async function assertTidUnused(key: string) {
+  const onlyPayments = `select 1 from payments p where p.status in ('pending', 'verified') and p.transaction_key = $1 limit 1`;
   const used = await q1(
     `select 1 from payments p where p.status in ('pending', 'verified') and p.transaction_key = $1
      union all
@@ -116,7 +118,7 @@ async function assertTidUnused(key: string) {
       where r.transaction_id = $1 and p.status in ('pending', 'verified')
      limit 1`,
     [key],
-  );
+  ).catch(() => q1(onlyPayments, [key])); // before the database update has run
   if (used) {
     throw new UserError(
       'payment',
