@@ -33,8 +33,33 @@ export async function shrinkImage(file: File, maxSide = MAX_SIDE, quality = 0.82
   }
 }
 
-export function shrinkImages(files: File[]): Promise<File[]> {
-  return Promise.all(files.map((f) => shrinkImage(f)));
+/** All photos of one upload together stay under this (Vercel's limit is 4.5 MB, leave room for the screenshot). */
+const TOTAL_BUDGET = 3.2 * 1024 * 1024;
+
+/**
+ * Shrinks a set of photos of any size. If together they are still too big
+ * (many large, detailed photos), they are shrunk again a bit smaller.
+ */
+export async function shrinkImages(files: File[]): Promise<File[]> {
+  const steps: [number, number][] = [
+    [1600, 0.82],
+    [1280, 0.75],
+    [1024, 0.68],
+    [800, 0.6],
+  ];
+  // One at a time: decoding several 50-100 MP photos together can run a phone out of memory
+  const each = async (list: File[], side: number, quality: number) => {
+    const res: File[] = [];
+    for (const f of list) res.push(await shrinkImage(f, side, quality));
+    return res;
+  };
+  let out = await each(files, steps[0][0], steps[0][1]);
+  for (const [side, quality] of steps.slice(1)) {
+    if (out.reduce((n, f) => n + f.size, 0) <= TOTAL_BUDGET) break;
+    // shrink the already-small copies again (fast), not the huge originals
+    out = await each(out, side, quality);
+  }
+  return out;
 }
 
 /** Reads the error from a failed upload, including Vercel's plain-text "too large" response. */

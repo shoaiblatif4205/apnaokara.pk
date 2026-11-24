@@ -10,7 +10,6 @@ import {
   isFreeNow,
   isProviderModel,
   isValidPakMobile,
-  MAX_PHOTO_BYTES,
   MAX_PHOTOS,
   minPhotos,
   models,
@@ -158,11 +157,10 @@ export function PostAdForm({ meta, locale, initialModel, initialReferral, commun
   function addPhotos(list: FileList | null) {
     if (!list) return;
     const room = MAX_PHOTOS - photos.length;
-    const picked = Array.from(list).slice(0, room);
-    if (picked.some((f) => f.size > MAX_PHOTO_BYTES)) {
-      setErrors((e) => ({ ...e, photos: t('photoTooBig') }));
-      return;
-    }
+    // Any size is fine: photos are shrunk in the browser before upload. Only non-images are refused.
+    const picked = Array.from(list)
+      .filter((f) => f.type.startsWith('image/') || /\.(jpe?g|png|webp|heic|heif)$/i.test(f.name))
+      .slice(0, room);
     setPhotos((p) => [...p, ...picked.map((file) => ({ file, url: URL.createObjectURL(file) }))]);
     setErrors((e) => ({ ...e, photos: '' }));
   }
