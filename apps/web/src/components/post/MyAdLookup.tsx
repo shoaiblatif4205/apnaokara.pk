@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { shrinkImage, uploadError } from '@/lib/shrinkImage';
+import { appendScreenshot, shrinkImage, uploadError } from '@/lib/shrinkImage';
 import { formatPrice } from '@apna-okara/shared';
 import type { MyAd } from '@/lib/listings';
 
@@ -217,7 +217,10 @@ export function MyAdLookup({ locale, initialRef, initialKey, paymentMethods }: {
     if (k) fd.append('key', k);
     try {
       // Payment screenshots are shrunk in the browser first (the server accepts at most 4.5 MB)
-      for (const [k, v] of Object.entries(extra ?? {})) fd.append(k, v instanceof File ? await shrinkImage(v) : v);
+      for (const [k, v] of Object.entries(extra ?? {})) {
+        if (k === 'screenshot' && v instanceof File) await appendScreenshot(fd, v);
+        else fd.append(k, v instanceof File ? await shrinkImage(v) : v);
+      }
       const res = await fetch('/api/v1/my-ads', { method: 'POST', body: fd });
       if (!res.ok) {
         setError(res.status === 404 ? t('notFound') : await uploadError(res, tp('errorGeneric'), tp('uploadTooBig')));

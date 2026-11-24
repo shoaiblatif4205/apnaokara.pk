@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { shrinkImage, uploadError } from '@/lib/shrinkImage';
+import { appendScreenshot, shrinkImage, uploadError } from '@/lib/shrinkImage';
 import { Check } from 'lucide-react';
 import { formatPrice } from '@apna-okara/shared';
 import { PLACEMENT_INFO, type Placement } from '@/lib/bannerConfig';
@@ -125,7 +125,7 @@ export function BannerBookingForm({
           // Images are shrunk in the browser first (the server accepts at most 4.5 MB)
           if (imageDesktop) fd.append('imageDesktop', await shrinkImage(imageDesktop, 2400, 0.88));
           if (imageMobile) fd.append('imageMobile', await shrinkImage(imageMobile, 1600, 0.88));
-          if (needsPay && shot) fd.append('screenshot', await shrinkImage(shot));
+          if (needsPay && shot) await appendScreenshot(fd, shot);
           const res = await fetch('/api/v1/banners', { method: 'POST', body: fd });
           if (res.ok) {
             const j = await res.json();

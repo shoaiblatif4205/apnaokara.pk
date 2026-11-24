@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { shrinkImage, shrinkImages, uploadError } from '@/lib/shrinkImage';
+import { appendScreenshot, shrinkImages, uploadError } from '@/lib/shrinkImage';
 import { useTranslations } from 'next-intl';
 import { Camera, Check, ImagePlus, MessageCircle, X } from 'lucide-react';
 import {
@@ -200,7 +200,7 @@ export function PostAdForm({ meta, locale, initialModel, initialReferral, commun
     try {
       // Shrink photos in the browser first (the server accepts at most 4.5 MB in total)
       for (const p of await shrinkImages(photos.map((x) => x.file))) fd.append('photos', p);
-      if (needsPayment && screenshot) fd.append('screenshot', await shrinkImage(screenshot));
+      if (needsPayment && screenshot) await appendScreenshot(fd, screenshot);
       const res = await fetch('/api/v1/listings', { method: 'POST', body: fd });
       if (!res.ok) {
         setServerError(await uploadError(res, t('errorGeneric'), t('uploadTooBig')));

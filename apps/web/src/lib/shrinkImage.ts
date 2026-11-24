@@ -47,3 +47,12 @@ export async function uploadError(res: Response, fallback: string, tooBig: strin
     return fallback;
   }
 }
+
+/**
+ * Adds a payment screenshot to an upload: kept a bit larger than photos so the server can read
+ * the date, amount and transaction ID on it, plus the time the phone says the file was made.
+ */
+export async function appendScreenshot(fd: FormData, file: File) {
+  fd.append('screenshot', await shrinkImage(file, 2200, 0.85));
+  if (file.lastModified) fd.append('screenshotTime', String(file.lastModified));
+}

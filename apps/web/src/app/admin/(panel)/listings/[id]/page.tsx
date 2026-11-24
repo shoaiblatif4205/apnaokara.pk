@@ -9,6 +9,7 @@ import { CopyButton } from '@/components/admin/CopyButton';
 import { statusBadge } from '@/components/admin/status';
 import { REVIEW_SELECT, ReviewItem, type ReviewRow } from '@/components/admin/ReviewItem';
 import { setVerified } from '../../reviews/actions';
+import { RECEIPT_COLS, RECEIPT_JOIN, ReceiptCheck, type ReceiptCols } from '@/components/admin/ReceiptCheck';
 import {
   approveListing,
   blockPhone,
@@ -91,11 +92,11 @@ export default async function ListingDetail(props: { params: Promise<{ id: strin
       [ad.id],
     ),
     q<{ id: string; purpose: string; amount: number; method: string; transaction_id: string | null; paid_from: string | null;
-        screenshot_path: string | null; status: string; created_at: string; dup: number }>(
-      `select p.id, p.purpose, p.amount, p.method, p.transaction_id, p.paid_from, p.screenshot_path, p.status, p.created_at,
+        screenshot_path: string | null; status: string; created_at: string; dup: number } & ReceiptCols>(
+      `select p.id, p.purpose, p.amount, p.method, p.transaction_id, p.paid_from, p.screenshot_path, p.status, p.created_at, ${RECEIPT_COLS},
               (select count(*)::int from payments d where p.transaction_id is not null
                  and lower(d.transaction_id) = lower(p.transaction_id) and d.id <> p.id) as dup
-         from payments p where p.listing_id = $1 order by p.created_at desc`,
+         from payments p ${RECEIPT_JOIN} where p.listing_id = $1 order by p.created_at desc`,
       [ad.id],
     ),
     q<{ event: string; details: Record<string, unknown>; created_at: string; admin_name: string | null }>(
@@ -453,6 +454,7 @@ export default async function ListingDetail(props: { params: Promise<{ id: strin
                         {p.dup > 0 && <Badge tone="red">Used {p.dup} time(s) before!</Badge>}
                       </p>
                       {p.paid_from && <p>Paid from: {p.paid_from}</p>}
+                      <ReceiptCheck r={p} amount={p.amount} createdAt={p.created_at} />
                       {p.screenshot_path && (
                         <a href={`/api/files/payment-screenshots/${p.screenshot_path}`} target="_blank" rel="noreferrer">
                           {/* eslint-disable-next-line @next/next/no-img-element */}

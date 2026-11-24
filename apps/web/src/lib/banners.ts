@@ -115,7 +115,7 @@ export async function createBannerBooking(form: FormData): Promise<{ statsToken:
     if (!availableMethods(accounts).includes(d.payment.method)) throw new UserError('payment', 'This payment method is not available');
     shot = await image(asUpload(form.get('screenshot')), 2000);
     if (!shot) throw new UserError('payment', 'Add the payment screenshot');
-    await assertNewPayment(d.payment.method, d.payment.transactionId, shot);
+    await assertNewPayment(d.payment.method, d.payment.transactionId, shot, { fileTime: form.get('screenshotTime') });
   }
 
   const id = randomUUID();

@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import type { PaymentAccounts } from '@/lib/meta';
-import { shrinkImage } from '@/lib/shrinkImage';
+import { appendScreenshot } from '@/lib/shrinkImage';
 
 export type Method = 'jazzcash' | 'easypaisa' | 'nayapay' | 'bank';
 export const METHOD_LABEL: Record<Method, string> = { jazzcash: 'JazzCash', easypaisa: 'Easypaisa', nayapay: 'NayaPay', bank: 'Bank transfer' };
@@ -62,5 +62,5 @@ export function payValid(p: PayState) {
 export async function appendPay(fd: FormData, p: PayState) {
   fd.append('method', p.method);
   fd.append('paidFrom', p.paidFrom);
-  if (p.shot) fd.append('screenshot', await shrinkImage(p.shot));
+  if (p.shot) await appendScreenshot(fd, p.shot);
 }

@@ -4,6 +4,7 @@ import { requireAdmin } from '@/lib/admin/auth';
 import { PAYMENTS_FROM, paymentsWhere, readPaymentFilters } from '@/lib/admin/paymentsQuery';
 import { Badge, Field, Notice, PageHeader, Section } from '@/components/admin/ui';
 import { SubmitButton } from '@/components/admin/SubmitButton';
+import { RECEIPT_COLS, RECEIPT_JOIN, ReceiptCheck, type ReceiptCols } from '@/components/admin/ReceiptCheck';
 import { rejectPayment, verifyPayment } from './actions';
 
 export const metadata = { title: 'Payments' };
@@ -23,7 +24,7 @@ type Row = {
   items: { key: string; label: string; amount: number }[]; listing_id: string | null; reference: string | null; title: string | null;
   listing_status: string | null; banner_id: string | null; business_name: string | null; verifier: string | null; promo: string | null; dup: number;
   rishta_id: string | null;
-};
+} & ReceiptCols;
 
 export default async function PaymentsPage(props: { searchParams: Promise<Record<string, string | undefined>> }) {
   const searchParams = await props.searchParams;
@@ -34,9 +35,9 @@ export default async function PaymentsPage(props: { searchParams: Promise<Record
     q<Row>(
       `select p.id, p.purpose, p.amount, p.subtotal, p.discount, p.method::text, p.transaction_id, p.paid_from, p.screenshot_path, p.status::text,
               p.reject_reason, p.created_at, p.items, l.id as listing_id, l.reference, l.title, l.status::text as listing_status,
-              b.id as banner_id, b.business_name, a.full_name as verifier, pc.code as promo, p.rishta_profile_id as rishta_id,
+              b.id as banner_id, b.business_name, a.full_name as verifier, pc.code as promo, p.rishta_profile_id as rishta_id, ${RECEIPT_COLS},
               (select count(*)::int from payments d where p.transaction_id is not null and lower(d.transaction_id) = lower(p.transaction_id) and d.id <> p.id) as dup
-         ${PAYMENTS_FROM} ${sql} order by p.created_at ${f.tab === 'pending' ? 'asc' : 'desc'} limit 200`,
+         ${PAYMENTS_FROM} ${RECEIPT_JOIN} ${sql} order by p.created_at ${f.tab === 'pending' ? 'asc' : 'desc'} limit 200`,
       params,
     ),
     q<{ status: string; n: number; total: number }>(
@@ -159,6 +160,7 @@ export default async function PaymentsPage(props: { searchParams: Promise<Record
                   {r.method} · TID <span dir="ltr">{r.transaction_id ?? '-'}</span>
                   {r.paid_from ? ` · from ${r.paid_from}` : ''}
                 </p>
+                <ReceiptCheck r={r} amount={r.amount} createdAt={r.created_at} />
                 {r.items?.length > 0 && (
                   <p className="text-ink-muted">
                     {r.items.map((i) => `${i.label} Rs ${i.amount}`).join(' + ')}

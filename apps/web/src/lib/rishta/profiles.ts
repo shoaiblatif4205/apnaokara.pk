@@ -180,7 +180,7 @@ async function takePayment(form: FormData, total: number) {
   if (shot.size > 10 * 1024 * 1024) throw new UserError('photo_size', 'Screenshot is too big (max 10 MB)');
   try {
     const buf = await processPhoto(Buffer.from(await shot.arrayBuffer()), 2000);
-    await assertNewPayment(payment.data.method, payment.data.transactionId, buf);
+    await assertNewPayment(payment.data.method, payment.data.transactionId, buf, { fileTime: form.get('screenshotTime') });
     const key = screenshotKey('rishta', buf);
     await saveObject('payment-screenshots', key, buf, 'image/webp');
     return { payment: payment.data, shotKey: key };

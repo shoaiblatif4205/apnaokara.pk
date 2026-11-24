@@ -196,7 +196,7 @@ export async function createListing(form: FormData): Promise<{ reference: string
     if (e instanceof BadImageError) throw new UserError('photo_type', 'Only photos (JPG, PNG, WebP, HEIC) can be uploaded');
     throw e;
   }
-  if (needsPayment) await assertNewPayment(input.payment!.method, input.payment!.transactionId, shot);
+  if (needsPayment) await assertNewPayment(input.payment!.method, input.payment!.transactionId, shot, { fileTime: form.get('screenshotTime') });
 
   const slug = `${slugify(input.title) || 'ad'}-${city.slug}`.slice(0, 90);
   const manageKey = makeManageKey();
@@ -406,7 +406,7 @@ export async function myAdAction(form: FormData): Promise<void> {
       if (shot.size > MAX_PHOTO_BYTES) throw new UserError('photo_size', 'Screenshot is too big (max 10 MB)');
       try {
         const buf = await processPhoto(Buffer.from(await shot.arrayBuffer()), 2000);
-        await assertNewPayment(payment.method, payment.transactionId, buf);
+        await assertNewPayment(payment.method, payment.transactionId, buf, { fileTime: form.get('screenshotTime') });
         shotKey = screenshotKey(ad.id, buf);
         await saveObject('payment-screenshots', shotKey, buf, 'image/webp');
       } catch (e) {
@@ -465,7 +465,7 @@ export async function myAdAction(form: FormData): Promise<void> {
       if (shot.size > MAX_PHOTO_BYTES) throw new UserError('photo_size', 'Screenshot is too big (max 10 MB)');
       try {
         const buf = await processPhoto(Buffer.from(await shot.arrayBuffer()), 2000);
-        await assertNewPayment(payment!.method, payment!.transactionId, buf);
+        await assertNewPayment(payment!.method, payment!.transactionId, buf, { fileTime: form.get('screenshotTime') });
         shotKey = screenshotKey(ad.id, buf);
         await saveObject('payment-screenshots', shotKey, buf, 'image/webp');
       } catch (e) {

@@ -46,7 +46,21 @@ const nextConfig = {
   // The shared package is TypeScript source; Next compiles it.
   transpilePackages: ['@apna-okara/shared'],
   // Node-only database / password packages stay outside the bundle
-  serverExternalPackages: ['pg', 'bcryptjs', 'sharp'],
+  serverExternalPackages: ['pg', 'bcryptjs', 'sharp', 'tesseract.js', 'tesseract.js-core'],
+  // Payment screenshot reading (OCR) starts a worker file and loads WASM + language data by path,
+  // which the file tracer cannot see, so ship them with every route that takes a payment.
+  outputFileTracingIncludes: Object.fromEntries(
+    ['/api/v1/listings', '/api/v1/my-ads', '/api/v1/banners', '/api/rishta/profiles', '/api/rishta/profiles/[id]'].map((r) => [
+      r,
+      [
+        '../../node_modules/tesseract.js/**/*',
+        '../../node_modules/tesseract.js-core/*.{js,wasm,json}',
+        '../../node_modules/@tesseract.js-data/eng/4.0.0_best_int/**/*',
+        '../../node_modules/@tesseract.js-data/eng/package.json',
+        '../../node_modules/{bmp-js,idb-keyval,is-electron,is-url,node-fetch,regenerator-runtime,wasm-feature-detect,zlibjs,whatwg-url,tr46,webidl-conversions}/**/*',
+      ],
+    ]),
+  ),
   experimental: {
     // Admin forms upload banner images (compressed on the server)
     serverActions: { bodySizeLimit: '12mb' },
