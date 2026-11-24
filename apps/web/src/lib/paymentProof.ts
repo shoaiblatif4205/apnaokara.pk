@@ -91,7 +91,31 @@ export async function assertNewPayment(
       );
     }
   }
+  // OCR worked but found no date: the screenshot is cut or unclear, so its age cannot be checked
+  if (info.ocrRan && !info.paidAt) {
+    throw new UserError(
+      'payment_unclear',
+      'We could not read the date on this screenshot. Add the full screenshot of the payment receipt, where the date, time, amount and transaction ID can be seen. / اس اسکرین شاٹ پر تاریخ نظر نہیں آ رہی۔ ادائیگی کی رسید کا پورا اسکرین شاٹ لگائیں جس میں تاریخ، وقت، رقم اور ٹرانزیکشن آئی ڈی نظر آئے۔',
+    );
+  }
   if (info.transactionId && info.transactionId !== typed) await assertTidUnused(info.transactionId);
+  // A copy of an earlier screenshot (re-saved, forwarded on WhatsApp, cropped) has a new file fingerprint,
+  // but the same payment: same app, same minute, same amount.
+  if (info.paidAt && info.hasTime && info.amount != null) {
+    const same = await q1(
+      `select 1 from payment_receipts r join payments p on p.screenshot_hash = r.screenshot_hash
+        where p.status in ('pending', 'verified') and p.method::text = $3 and r.amount = $2 and r.has_time
+          and date_trunc('minute', r.paid_at) = date_trunc('minute', $1::timestamptz)
+        limit 1`,
+      [info.paidAt, info.amount, method],
+    ).catch(() => null); // before the database update has run
+    if (same) {
+      throw new UserError(
+        'payment',
+        'This payment has already been used for another ad. Each payment can be used only once: make a new payment for this ad. / یہ ادائیگی پہلے کسی اور اشتہار کے لیے استعمال ہو چکی ہے۔ ہر ادائیگی صرف ایک بار استعمال ہو سکتی ہے، اس اشتہار کے لیے نئی ادائیگی کریں۔',
+      );
+    }
+  }
 
   // When the phone says the screenshot file was made (shown to the admin, not used to refuse)
   const n = Number(opts.fileTime);

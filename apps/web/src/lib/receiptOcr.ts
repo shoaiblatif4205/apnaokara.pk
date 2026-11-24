@@ -14,9 +14,11 @@ export type ReceiptInfo = {
   amount: number | null;
   transactionId: string | null;
   text: string;
+  /** false when OCR itself failed or timed out (then nothing can be judged from the screenshot) */
+  ocrRan: boolean;
 };
 
-const EMPTY: ReceiptInfo = { paidAt: null, hasTime: false, amount: null, transactionId: null, text: '' };
+const EMPTY: ReceiptInfo = { paidAt: null, hasTime: false, amount: null, transactionId: null, text: '', ocrRan: false };
 const PKT_OFFSET_MIN = 5 * 60; // Pakistan is UTC+5 all year
 const MONTHS: Record<string, number> = {
   jan: 1, feb: 2, mar: 3, apr: 4, may: 5, jun: 6, jul: 7, aug: 8, sep: 9, sept: 9, oct: 10, nov: 11, dec: 12,
@@ -148,5 +150,5 @@ export function findTransactionId(text: string): string | null {
 export function parseReceiptText(raw: string): ReceiptInfo {
   const text = raw.replace(/\r/g, '').replace(/[ \t]+/g, ' ').trim();
   const d = findDate(text);
-  return { paidAt: d?.date ?? null, hasTime: d?.hasTime ?? false, amount: findAmount(text), transactionId: findTransactionId(text), text: text.slice(0, 2000) };
+  return { paidAt: d?.date ?? null, hasTime: d?.hasTime ?? false, amount: findAmount(text), transactionId: findTransactionId(text), text: text.slice(0, 2000), ocrRan: true };
 }
