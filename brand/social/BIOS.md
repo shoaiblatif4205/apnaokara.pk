@@ -37,13 +37,13 @@ Pictures are in this folder (`brand/social/`). Until the domain is bought, use t
 >
 > 🌐 apnaokara.pk · 📞 / WhatsApp 0307 2849373 · ✉️ apnaokarapk@gmail.com
 
-Category: **Shopping & Retail** (or *Local Business*). Location: **Okara, Punjab, Pakistan**.
+Category: Facebook **Shopping & Retail** + **Community** · Instagram **Shopping & Retail** · TikTok **Shopping & Retail** · YouTube **People & Blogs**. Rishta page: Facebook **Community Service**. Location: **Okara, Punjab, Pakistan**.
 
 **Instagram bio (under 150 letters)**
 > اوکاڑہ · ساہیوال · پاکپتن کا اپنا بازار 🛒
 > Buy · Sell · Jobs · Services · Rishta
 > 📞 0307 2849373
-> 👇 Post your ad free
+> 👇 Post your ad in 2 minutes
 
 (Link in bio: the website.)
 

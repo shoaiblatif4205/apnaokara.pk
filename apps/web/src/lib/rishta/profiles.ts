@@ -170,8 +170,8 @@ export async function quoteRishta(opts: { premium: boolean; promoCode?: string; 
 async function takePayment(form: FormData, total: number) {
   if (total <= 0) return { payment: null, shotKey: null };
   const payment = z
-    .object({ method: z.enum(['jazzcash', 'easypaisa', 'nayapay', 'bank']), transactionId: z.string().trim().min(4).max(40), paidFrom: z.string().trim().max(80).optional().default('') })
-    .safeParse({ method: form.get('method'), transactionId: form.get('transactionId'), paidFrom: form.get('paidFrom') ?? '' });
+    .object({ method: z.enum(['jazzcash', 'easypaisa', 'nayapay', 'bank']), transactionId: z.string().trim().max(40).optional().default(""), paidFrom: z.string().trim().max(80).optional().default('') })
+    .safeParse({ method: form.get('method'), transactionId: form.get('transactionId') ?? '', paidFrom: form.get('paidFrom') ?? '' });
   if (!payment.success) throw new UserError('payment', 'Add the payment details');
   const accounts = (await getSetting<PaymentAccounts>('public.payment_accounts')) ?? {};
   if (!availableMethods(accounts).includes(payment.data.method)) throw new UserError('payment', 'This payment method is not available');
@@ -216,7 +216,7 @@ export async function createProfile(account: RishtaAccount, form: FormData): Pro
       `insert into payments (purpose, rishta_profile_id, amount, method, transaction_id, paid_from, screenshot_path, status, items, subtotal, discount, promo_code_id)
        values ('rishta', $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) returning id`,
       [
-        id, quote.total, payment?.method ?? 'free', payment?.transactionId ?? null, payment?.paidFrom || null, shotKey,
+        id, quote.total, payment?.method ?? 'free', payment?.transactionId || null, payment?.paidFrom || null, shotKey,
         quote.total > 0 ? 'pending' : quote.free && !quote.items.length ? 'free' : 'pending', JSON.stringify(quote.items), quote.subtotal, quote.discount, quote.promoId,
       ],
     );
@@ -255,7 +255,7 @@ export async function payForProfile(account: RishtaAccount, profileId: string, f
     const pay = await c.query<{ id: string }>(
       `insert into payments (purpose, rishta_profile_id, amount, method, transaction_id, paid_from, screenshot_path, status, items, subtotal, discount, promo_code_id)
        values ('rishta', $1, $2, $3, $4, $5, $6, 'pending', $7, $8, $9, $10) returning id`,
-      [profileId, quote.total, payment?.method ?? 'free', payment?.transactionId ?? null, payment?.paidFrom || null, shotKey, JSON.stringify(quote.items), quote.subtotal, quote.discount, quote.promoId],
+      [profileId, quote.total, payment?.method ?? 'free', payment?.transactionId || null, payment?.paidFrom || null, shotKey, JSON.stringify(quote.items), quote.subtotal, quote.discount, quote.promoId],
     );
     if (quote.promoId) await recordPromoUse(c, quote.promoId, pay.rows[0].id, account.phone);
     if (renew) await c.query(`update rishta_profiles set status = 'pending' where id = $1`, [profileId]);

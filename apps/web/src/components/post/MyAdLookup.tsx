@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { shrinkImage, uploadError } from '@/lib/shrinkImage';
 import { formatPrice } from '@apna-okara/shared';
 import type { MyAd } from '@/lib/listings';
 
@@ -78,7 +79,6 @@ function UpgradeBox({
   const [promo, setPromo] = useState('');
   const [total, setTotal] = useState<number | null>(null);
   const [method, setMethod] = useState<Method | ''>('');
-  const [tid, setTid] = useState('');
   const [shot, setShot] = useState<File | null>(null);
   const [error, setError] = useState('');
   const up = ad.upgrade!;
@@ -110,8 +110,8 @@ function UpgradeBox({
         if (!featured && !boost) return setError(tp('required'));
         const extra: Record<string, string | Blob> = { action: 'upgrade', featured: String(featured), boost: String(boost), promoCode: promo };
         if ((total ?? 1) > 0) {
-          if (!method || tid.trim().length < 4 || !shot) return setError(tp('required'));
-          Object.assign(extra, { method, transactionId: tid.trim(), screenshot: shot });
+          if (!method || !shot) return setError(tp('required'));
+          Object.assign(extra, { method, screenshot: shot });
         }
         await onSubmit(extra);
       }}
@@ -161,12 +161,6 @@ function UpgradeBox({
             </select>
           </div>
           <div>
-            <label htmlFor="up-tid" className="block text-sm font-semibold">
-              {tp('transactionId')}
-            </label>
-            <input id="up-tid" dir="ltr" value={tid} onChange={(e) => setTid(e.target.value)} className={inputCls} />
-          </div>
-          <div>
             <label htmlFor="up-shot" className="block text-sm font-semibold">
               {tp('screenshot')}
             </label>
@@ -203,7 +197,6 @@ export function MyAdLookup({ locale, initialRef, initialKey, paymentMethods }: {
   const [message, setMessage] = useState('');
   const [days, setDays] = useState<number | null>(null);
   const [method, setMethod] = useState<Method | ''>('');
-  const [transactionId, setTransactionId] = useState('');
   const [screenshot, setScreenshot] = useState<File | null>(null);
 
   useEffect(() => {
@@ -222,15 +215,16 @@ export function MyAdLookup({ locale, initialRef, initialKey, paymentMethods }: {
     fd.append('phone', phoneArg.trim());
     const k = keyArg || saved.find((s) => s.reference === refArg.trim().toUpperCase())?.key || '';
     if (k) fd.append('key', k);
-    for (const [k, v] of Object.entries(extra ?? {})) fd.append(k, v);
     try {
+      // Payment screenshots are shrunk in the browser first (the server accepts at most 4.5 MB)
+      for (const [k, v] of Object.entries(extra ?? {})) fd.append(k, v instanceof File ? await shrinkImage(v) : v);
       const res = await fetch('/api/v1/my-ads', { method: 'POST', body: fd });
-      const json = await res.json();
       if (!res.ok) {
-        setError(res.status === 404 ? t('notFound') : json.message || tp('errorGeneric'));
+        setError(res.status === 404 ? t('notFound') : await uploadError(res, tp('errorGeneric'), tp('uploadTooBig')));
         if (!extra) setAd(null);
         return false;
       }
+      const json = await res.json();
       setAd(json.ad);
       return true;
     } catch {
@@ -394,9 +388,8 @@ export function MyAdLookup({ locale, initialRef, initialKey, paymentMethods }: {
                   if (!days) return setError(tp('required'));
                   const extra: Record<string, string | Blob> = { action: 'renew', durationDays: String(days) };
                   if (!ad.renew.free) {
-                    if (!method || transactionId.trim().length < 4 || !screenshot) return setError(tp('required'));
+                    if (!method || !screenshot) return setError(tp('required'));
                     extra.method = method;
-                    extra.transactionId = transactionId.trim();
                     extra.screenshot = screenshot;
                   }
                   if (await call(extra)) setNotice(t('done'));
@@ -431,12 +424,6 @@ export function MyAdLookup({ locale, initialRef, initialKey, paymentMethods }: {
                           </option>
                         ))}
                       </select>
-                    </div>
-                    <div>
-                      <label htmlFor="rtid" className="block text-sm font-semibold">
-                        {tp('transactionId')}
-                      </label>
-                      <input id="rtid" dir="ltr" value={transactionId} onChange={(e) => setTransactionId(e.target.value)} className={inputCls} />
                     </div>
                     <div>
                       <label htmlFor="rshot" className="block text-sm font-semibold">

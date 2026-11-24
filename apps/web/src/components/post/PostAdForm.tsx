@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { shrinkImage, shrinkImages, uploadError } from '@/lib/shrinkImage';
 import { useTranslations } from 'next-intl';
 import { Camera, Check, ImagePlus, MessageCircle, X } from 'lucide-react';
 import {
@@ -57,7 +58,6 @@ export function PostAdForm({ meta, locale, initialModel, initialReferral, commun
   const [showPhone, setShowPhone] = useState(true);
   const [durationDays, setDurationDays] = useState<number | null>(null);
   const [method, setMethod] = useState<'jazzcash' | 'easypaisa' | 'nayapay' | 'bank' | ''>('');
-  const [transactionId, setTransactionId] = useState('');
   const [paidFrom, setPaidFrom] = useState('');
   const [screenshot, setScreenshot] = useState<File | null>(null);
   const [agree, setAgree] = useState(false);
@@ -140,7 +140,6 @@ export function PostAdForm({ meta, locale, initialModel, initialReferral, commun
       if (!durationDays) e.duration = t('required');
       if (needsPayment) {
         if (!method) e.method = t('required');
-        if (transactionId.trim().length < 4) e.transactionId = t('required');
         if (!screenshot) e.screenshot = t('required');
       }
       if (!agree) e.agree = t('required');
@@ -192,20 +191,21 @@ export function PostAdForm({ meta, locale, initialModel, initialReferral, commun
       featured,
       boost,
       promoCode: promo,
-      payment: needsPayment ? { method, transactionId: transactionId.trim(), paidFrom: paidFrom.trim() } : null,
+      payment: needsPayment ? { method, paidFrom: paidFrom.trim() } : null,
       agree: true,
       locale,
     };
     const fd = new FormData();
     fd.append('data', JSON.stringify(data));
-    photos.forEach((p) => fd.append('photos', p.file));
-    if (needsPayment && screenshot) fd.append('screenshot', screenshot);
     try {
+      // Shrink photos in the browser first (the server accepts at most 4.5 MB in total)
+      for (const p of await shrinkImages(photos.map((x) => x.file))) fd.append('photos', p);
+      if (needsPayment && screenshot) fd.append('screenshot', await shrinkImage(screenshot));
       const res = await fetch('/api/v1/listings', { method: 'POST', body: fd });
-      const json = await res.json();
       if (!res.ok) {
-        setServerError(json.message || t('errorGeneric'));
+        setServerError(await uploadError(res, t('errorGeneric'), t('uploadTooBig')));
       } else {
+        const json = await res.json();
         setManageKey(json.manageKey ?? '');
       setReference(json.reference);
         try {
@@ -720,13 +720,6 @@ export function PostAdForm({ meta, locale, initialModel, initialReferral, commun
                           ))}
                         </select>
                         {err('method')}
-                      </div>
-                      <div>
-                        <label htmlFor="transactionId" className={labelCls}>
-                          {t('transactionId')}
-                        </label>
-                        <input id="transactionId" dir="ltr" value={transactionId} onChange={(e) => setTransactionId(e.target.value)} className={inputCls} />
-                        {err('transactionId')}
                       </div>
                       <div>
                         <label htmlFor="paidFrom" className={labelCls}>

@@ -50,7 +50,6 @@ export default function PostScreen() {
   const [showPhone, setShowPhone] = useState(true);
   const [durationDays, setDurationDays] = useState<number | null>(null);
   const [method, setMethod] = useState<PayMethod | null>(null);
-  const [transactionId, setTransactionId] = useState('');
   const [paidFrom, setPaidFrom] = useState('');
   const [screenshot, setScreenshot] = useState<LocalFile | null>(null);
   const [agree, setAgree] = useState(false);
@@ -119,7 +118,6 @@ export default function PostScreen() {
     setFields({});
     setPhotos([]);
     setDurationDays(null);
-    setTransactionId('');
     setScreenshot(null);
     setAgree(false);
     setFeatured(false);
@@ -156,7 +154,6 @@ export default function PostScreen() {
       if (!durationDays) e.duration = req;
       if (needsPayment) {
         if (!method) e.method = req;
-        if (transactionId.trim().length < 4) e.transactionId = req;
         if (!screenshot) e.screenshot = req;
       }
       if (!agree) e.agree = req;
@@ -190,7 +187,7 @@ export default function PostScreen() {
           boost,
           promoCode: promo,
           referralCode: referral,
-          payment: needsPayment ? { method, transactionId: transactionId.trim(), paidFrom: paidFrom.trim() } : null,
+          payment: needsPayment ? { method, paidFrom: paidFrom.trim() } : null,
           agree: true,
           locale,
         },
@@ -590,7 +587,6 @@ ${t('post.manageKey')}: ${manageKey} (${t('post.keepPrivate')})` : ''}`)}`)}
                     </ChipRow>
                     <ErrorText text={errors.method} />
                     <View style={{ height: spacing.md }} />
-                    <Input label={t('post.transactionId')} value={transactionId} onChangeText={setTransactionId} ltr autoCapitalize="characters" error={errors.transactionId} />
                     <Input label={t('post.paidFrom')} value={paidFrom} onChangeText={setPaidFrom} />
                     <Label>{t('post.screenshot')}</Label>
                     {screenshot && <Image source={{ uri: screenshot.uri }} style={{ width: 120, height: 200, borderRadius: radius.sm, marginBottom: spacing.sm }} />}

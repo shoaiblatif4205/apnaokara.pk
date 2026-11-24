@@ -2,12 +2,13 @@
 
 import { useTranslations } from 'next-intl';
 import type { PaymentAccounts } from '@/lib/meta';
+import { shrinkImage } from '@/lib/shrinkImage';
 
 export type Method = 'jazzcash' | 'easypaisa' | 'nayapay' | 'bank';
 export const METHOD_LABEL: Record<Method, string> = { jazzcash: 'JazzCash', easypaisa: 'Easypaisa', nayapay: 'NayaPay', bank: 'Bank transfer' };
-export type PayState = { method: Method | ''; tid: string; paidFrom: string; shot: File | null };
+export type PayState = { method: Method | ''; paidFrom: string; shot: File | null };
 
-/** Payment details block (accounts to pay to + method, transaction ID, screenshot). */
+/** Payment details block (accounts to pay to + method, screenshot). */
 export function PaymentFields({ methods, accounts, value, onChange }: { methods: Method[]; accounts: PaymentAccounts; value: PayState; onChange: (v: PayState) => void }) {
   const tp = useTranslations('post');
   const input = 'block min-h-[44px] w-full rounded-lg border border-line bg-white px-3 py-2';
@@ -41,10 +42,6 @@ export function PaymentFields({ methods, accounts, value, onChange }: { methods:
           </select>
         </div>
         <div>
-          <label htmlFor="pf-tid" className="block text-sm font-semibold">{tp('transactionId')}</label>
-          <input id="pf-tid" dir="ltr" value={value.tid} onChange={(e) => onChange({ ...value, tid: e.target.value })} className={input} />
-        </div>
-        <div>
           <label htmlFor="pf-from" className="block text-sm font-semibold">{tp('paidFrom')}</label>
           <input id="pf-from" value={value.paidFrom} onChange={(e) => onChange({ ...value, paidFrom: e.target.value })} className={input} />
         </div>
@@ -58,12 +55,12 @@ export function PaymentFields({ methods, accounts, value, onChange }: { methods:
 }
 
 export function payValid(p: PayState) {
-  return !!p.method && p.tid.trim().length >= 4 && !!p.shot;
+  return !!p.method && !!p.shot;
 }
 
-export function appendPay(fd: FormData, p: PayState) {
+/** Adds the payment to the form. The screenshot is shrunk first (the server accepts at most 4.5 MB). */
+export async function appendPay(fd: FormData, p: PayState) {
   fd.append('method', p.method);
-  fd.append('transactionId', p.tid.trim());
   fd.append('paidFrom', p.paidFrom);
-  if (p.shot) fd.append('screenshot', p.shot);
+  if (p.shot) fd.append('screenshot', await shrinkImage(p.shot));
 }

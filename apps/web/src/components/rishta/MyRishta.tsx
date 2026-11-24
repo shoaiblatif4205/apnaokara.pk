@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { formatPrice, optionLabel, RISHTA_OPTIONS } from '@apna-okara/shared';
 import { Link } from '@/i18n/routing';
 import type { PaymentAccounts } from '@/lib/meta';
+import { uploadError } from '@/lib/shrinkImage';
 import { appendPay, PaymentFields, payValid, type Method, type PayState } from './PaymentFields';
 
 type Profile = {
@@ -30,7 +31,7 @@ function PayBox({ p, me, methods, accounts, onDone }: { p: Profile; me: Me; meth
   const tp = useTranslations('post');
   const [open, setOpen] = useState(false);
   const [premium, setPremium] = useState(false);
-  const [pay, setPay] = useState<PayState>({ method: '', tid: '', paidFrom: '', shot: null });
+  const [pay, setPay] = useState<PayState>({ method: '', paidFrom: '', shot: null });
   const [error, setError] = useState('');
   const expired = p.status === 'expired' || (p.status === 'approved' && p.expires_at !== null && new Date(p.expires_at) <= new Date());
   const canPremium = me.plan.premium_price !== null && !p.is_premium && (p.status === 'approved' || expired);
@@ -62,10 +63,10 @@ function PayBox({ p, me, methods, accounts, onDone }: { p: Profile; me: Me; meth
         const fd = new FormData();
         fd.append('action', 'pay');
         fd.append('premium', String(premium));
-        if (total > 0) appendPay(fd, pay);
+        if (total > 0) await appendPay(fd, pay);
         const r = await fetch(`/api/rishta/profiles/${p.id}`, { method: 'POST', body: fd });
         if (r.ok) onDone();
-        else setError((await r.json()).message);
+        else setError(await uploadError(r, tp('errorGeneric'), tp('uploadTooBig')));
       }}
     >
       {canPremium && (

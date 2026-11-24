@@ -4,6 +4,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import { formatPrice, RISHTA_OPTIONS, type Option } from '@apna-okara/shared';
 import type { PaymentAccounts } from '@/lib/meta';
+import { shrinkImage, uploadError } from '@/lib/shrinkImage';
 import { appendPay, PaymentFields, payValid, type Method, type PayState } from './PaymentFields';
 
 type City = { id: number; name: string; localities: { id: number; name: string }[] };
@@ -62,7 +63,7 @@ export function ProfileForm({
   const [photos, setPhotos] = useState<{ id: number; is_approved: boolean }[]>([]);
   const [agree, setAgree] = useState(false);
   const [premium, setPremium] = useState(false);
-  const [pay, setPay] = useState<PayState>({ method: '', tid: '', paidFrom: '', shot: null });
+  const [pay, setPay] = useState<PayState>({ method: '', paidFrom: '', shot: null });
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
@@ -153,10 +154,10 @@ export function ProfileForm({
             if (total > 0 && !payValid(pay)) throw new Error(tp('required'));
             const fd = new FormData();
             fd.append('data', JSON.stringify({ ...data, premium }));
-            if (total > 0) appendPay(fd, pay);
+            if (total > 0) await appendPay(fd, pay);
             const r = await fetch('/api/rishta/profiles', { method: 'POST', body: fd });
+            if (!r.ok) throw new Error(await uploadError(r, tp('errorGeneric'), tp('uploadTooBig')));
             const j = await r.json();
-            if (!r.ok) throw new Error(j.message);
             setReference(j.reference);
             window.scrollTo({ top: 0 });
           }
@@ -271,9 +272,9 @@ export function ProfileForm({
                   if (!file) return;
                   const fd = new FormData();
                   fd.append('action', 'photo');
-                  fd.append('photo', file);
+                  fd.append('photo', await shrinkImage(file));
                   const r = await fetch(`/api/rishta/profiles/${profileId}`, { method: 'POST', body: fd });
-                  if (!r.ok) setError((await r.json()).message);
+                  if (!r.ok) setError(await uploadError(r, tp('errorGeneric'), tp('uploadTooBig')));
                   void loadOwn();
                 }}
               />

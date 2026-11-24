@@ -34,7 +34,6 @@ export default function MyAdsScreen() {
   const [days, setDays] = useState<number | null>(null);
   const [methods, setMethods] = useState<PayMethod[]>([]);
   const [method, setMethod] = useState<PayMethod | null>(null);
-  const [transactionId, setTransactionId] = useState('');
   const [screenshot, setScreenshot] = useState<LocalFile | null>(null);
   const [replies, setReplies] = useState<Record<number, string>>({});
   const [upFeatured, setUpFeatured] = useState(false);
@@ -194,7 +193,6 @@ export default function MyAdsScreen() {
                             <Chip key={m} label={METHOD_LABEL[m]} active={method === m} onPress={() => setMethod(m)} />
                           ))}
                         </ChipRow>
-                        <Input label={t('post.transactionId')} value={transactionId} onChangeText={setTransactionId} ltr />
                         <Button
                           label={screenshot ? `✓ ${t('post.screenshot')}` : t('post.screenshot')}
                           kind="outline"
@@ -206,9 +204,9 @@ export default function MyAdsScreen() {
                             kind="accent"
                             disabled={busy}
                             onPress={async () => {
-                              if (!method || transactionId.trim().length < 4 || !screenshot) return setError(t('post.required'));
+                              if (!method || !screenshot) return setError(t('post.required'));
                               const ok = await run(
-                                { action: 'upgrade', featured: String(upFeatured), boost: String(upBoost), method, transactionId: transactionId.trim() },
+                                { action: 'upgrade', featured: String(upFeatured), boost: String(upBoost), method },
                                 { key: 'screenshot', file: screenshot },
                               );
                               if (ok) setNotice(t('myAds.done'));
@@ -246,7 +244,6 @@ export default function MyAdsScreen() {
                         <Chip key={m} label={METHOD_LABEL[m]} active={method === m} onPress={() => setMethod(m)} />
                       ))}
                     </ChipRow>
-                    <Input label={t('post.transactionId')} value={transactionId} onChangeText={setTransactionId} ltr />
                     <Button label={screenshot ? '✓ ' + t('post.screenshot') : t('post.screenshot')} kind="outline" onPress={async () => setScreenshot((await pickPhotos(1))[0] ?? screenshot)} />
                   </>
                 )}
@@ -256,9 +253,9 @@ export default function MyAdsScreen() {
                     disabled={busy}
                     onPress={async () => {
                       if (!days) return setError(t('post.required'));
-                      if (!ad.renew.free && (!method || transactionId.trim().length < 4 || !screenshot)) return setError(t('post.required'));
+                      if (!ad.renew.free && (!method || !screenshot)) return setError(t('post.required'));
                       const extra: Record<string, string> = { action: 'renew', durationDays: String(days) };
-                      if (!ad.renew.free) Object.assign(extra, { method: method!, transactionId: transactionId.trim() });
+                      if (!ad.renew.free) Object.assign(extra, { method: method! });
                       if (await run(extra, !ad.renew.free && screenshot ? { key: 'screenshot', file: screenshot } : undefined)) setNotice(t('myAds.done'));
                     }}
                   />

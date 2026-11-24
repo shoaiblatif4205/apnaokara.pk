@@ -27,7 +27,7 @@ export { UserError };
 
 const paymentSchema = z.object({
   method: z.enum(['jazzcash', 'easypaisa', 'nayapay', 'bank']),
-  transactionId: z.string().trim().min(4).max(40),
+  transactionId: z.string().trim().max(40).optional().default(""),
   paidFrom: z.string().trim().max(80).optional().default(''),
 });
 
@@ -234,7 +234,7 @@ export async function createListing(form: FormData): Promise<{ reference: string
       `insert into payments (purpose, listing_id, amount, method, transaction_id, paid_from, screenshot_path, status, items, subtotal, discount, promo_code_id)
        values ('listing', $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) returning id`,
       needsPayment
-        ? [id, amount, input.payment!.method, input.payment!.transactionId, input.payment!.paidFrom || null, shotKey, 'pending',
+        ? [id, amount, input.payment!.method, input.payment!.transactionId || null, input.payment!.paidFrom || null, shotKey, 'pending',
             JSON.stringify(quote.items), quote.subtotal, quote.discount, quote.promoId]
         : [id, 0, 'free', null, null, null, free ? 'free' : 'pending', JSON.stringify(quote.items), quote.subtotal, quote.discount, quote.promoId],
     );
@@ -396,7 +396,7 @@ export async function myAdAction(form: FormData): Promise<void> {
     let shotKey: string | null = null;
     let payment: z.infer<typeof paymentSchema> | null = null;
     if (quote.total > 0) {
-      const p = paymentSchema.safeParse({ method: form.get('method'), transactionId: form.get('transactionId'), paidFrom: form.get('paidFrom') ?? '' });
+      const p = paymentSchema.safeParse({ method: form.get('method'), transactionId: form.get('transactionId') ?? '', paidFrom: form.get('paidFrom') ?? '' });
       if (!p.success) throw new UserError('payment', 'Add the payment details');
       payment = p.data;
       const meta = await loadMeta();
@@ -419,7 +419,7 @@ export async function myAdAction(form: FormData): Promise<void> {
         `insert into payments (purpose, listing_id, amount, method, transaction_id, paid_from, screenshot_path, status, items, subtotal, discount, promo_code_id)
          values ($1, $2, $3, $4, $5, $6, $7, 'pending', $8, $9, $10, $11) returning id`,
         [
-          featured ? 'featured' : 'whatsapp_boost', ad.id, quote.total, payment?.method ?? 'free', payment?.transactionId ?? null,
+          featured ? 'featured' : 'whatsapp_boost', ad.id, quote.total, payment?.method ?? 'free', payment?.transactionId || null,
           payment?.paidFrom || null, shotKey, JSON.stringify(quote.items), quote.subtotal, quote.discount, quote.promoId,
         ],
       );
@@ -453,7 +453,7 @@ export async function myAdAction(form: FormData): Promise<void> {
     if (!info.renew.free) {
       const p = paymentSchema.safeParse({
         method: form.get('method'),
-        transactionId: form.get('transactionId'),
+        transactionId: form.get('transactionId') ?? '',
         paidFrom: form.get('paidFrom') ?? '',
       });
       if (!p.success) throw new UserError('payment', 'Add the payment details');
@@ -483,7 +483,7 @@ export async function myAdAction(form: FormData): Promise<void> {
          values ('renewal', $1, $2, $3, $4, $5, $6, $7)`,
         info.renew.free
           ? [ad.id, 0, 'free', null, null, null, 'free']
-          : [ad.id, option.price, payment!.method, payment!.transactionId, payment!.paidFrom || null, shotKey, 'pending'],
+          : [ad.id, option.price, payment!.method, payment!.transactionId || null, payment!.paidFrom || null, shotKey, 'pending'],
       );
       await c.query(`insert into listing_history (listing_id, event, details) values ($1, 'renewal_requested', $2)`, [
         ad.id,

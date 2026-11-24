@@ -21,8 +21,13 @@ export function cleanTransactionId(tid: string): string {
   return tid.toUpperCase().replace(/[^A-Z0-9]/g, '');
 }
 
-export async function assertNewPayment(method: string, transactionId: string, processedShot: Buffer | null): Promise<void> {
-  const key = cleanTransactionId(transactionId);
+export async function assertNewPayment(method: string, transactionId: string | null | undefined, processedShot: Buffer | null): Promise<void> {
+  if (!processedShot) throw new UserError('payment', 'Please add the screenshot of your payment.');
+  const usedShot = await q1(`select 1 from payments where screenshot_hash = $1 and status <> 'rejected'`, [screenshotHash(processedShot)]);
+  if (usedShot) throw new UserError('payment', 'This screenshot has already been used for another payment. Send the screenshot of this payment.');
+  // The transaction ID is optional now (the screenshot is the proof). If one is given, check it.
+  const key = cleanTransactionId(transactionId ?? '');
+  if (!key) return;
   // JazzCash / Easypaisa IDs are long numbers; bank references are letters and digits
   if (key.length < 6 || key.length > 30 || ((method === 'jazzcash' || method === 'easypaisa') && !/\d{6,}/.test(key))) {
     throw new UserError('payment', 'This transaction ID does not look right. Copy it exactly from your payment message.');
@@ -32,8 +37,4 @@ export async function assertNewPayment(method: string, transactionId: string, pr
   }
   const usedTid = await q1(`select 1 from payments where method::text = $1 and transaction_key = $2 and status in ('pending', 'verified')`, [method, key]);
   if (usedTid) throw new UserError('payment', 'This transaction ID has already been used. Each payment can be used only once.');
-  if (processedShot) {
-    const usedShot = await q1(`select 1 from payments where screenshot_hash = $1 and status <> 'rejected'`, [screenshotHash(processedShot)]);
-    if (usedShot) throw new UserError('payment', 'This screenshot has already been used for another payment. Send the screenshot of this payment.');
-  }
 }

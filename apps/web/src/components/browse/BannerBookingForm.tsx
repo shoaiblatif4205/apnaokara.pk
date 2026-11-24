@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { shrinkImage, uploadError } from '@/lib/shrinkImage';
 import { Check } from 'lucide-react';
 import { formatPrice } from '@apna-okara/shared';
 import { PLACEMENT_INFO, type Placement } from '@/lib/bannerConfig';
@@ -52,7 +53,6 @@ export function BannerBookingForm({
   const [promo, setPromo] = useState('');
   const [total, setTotal] = useState<number | null>(null);
   const [method, setMethod] = useState<Method | ''>('');
-  const [tid, setTid] = useState('');
   const [paidFrom, setPaidFrom] = useState('');
   const [shot, setShot] = useState<File | null>(null);
   const [agree, setAgree] = useState(false);
@@ -110,7 +110,7 @@ export function BannerBookingForm({
         e.preventDefault();
         setError('');
         if (!imageDesktop && !design) return setError(t('imageRequired'));
-        if (needsPay && (!method || tid.trim().length < 4 || !shot)) return setError(tp('required'));
+        if (needsPay && (!method || !shot)) return setError(tp('required'));
         if (!agree) return setError(tp('required'));
         setBusy(true);
         const fd = new FormData();
@@ -118,19 +118,20 @@ export function BannerBookingForm({
           'data',
           JSON.stringify({
             businessName, contactName, phone, whatsapp, placement, days, startDate, link: link.trim(), cityIds, categoryIds, platform, design,
-            title, text, promoCode: promo, payment: needsPay ? { method, transactionId: tid.trim(), paidFrom } : null, agree: true,
+            title, text, promoCode: promo, payment: needsPay ? { method, paidFrom } : null, agree: true,
           }),
         );
-        if (imageDesktop) fd.append('imageDesktop', imageDesktop);
-        if (imageMobile) fd.append('imageMobile', imageMobile);
-        if (needsPay && shot) fd.append('screenshot', shot);
         try {
+          // Images are shrunk in the browser first (the server accepts at most 4.5 MB)
+          if (imageDesktop) fd.append('imageDesktop', await shrinkImage(imageDesktop, 2400, 0.88));
+          if (imageMobile) fd.append('imageMobile', await shrinkImage(imageMobile, 1600, 0.88));
+          if (needsPay && shot) fd.append('screenshot', await shrinkImage(shot));
           const res = await fetch('/api/v1/banners', { method: 'POST', body: fd });
-          const j = await res.json();
           if (res.ok) {
+            const j = await res.json();
             setToken(j.statsToken);
             window.scrollTo({ top: 0, behavior: 'smooth' });
-          } else setError(j.message || tp('errorGeneric'));
+          } else setError(await uploadError(res, tp('errorGeneric'), tp('uploadTooBig')));
         } catch {
           setError(tp('errorGeneric'));
         } finally {
@@ -294,10 +295,6 @@ export function BannerBookingForm({
                       </option>
                     ))}
                   </select>
-                </div>
-                <div>
-                  <label htmlFor="bk-tid" className={label}>{tp('transactionId')}</label>
-                  <input id="bk-tid" dir="ltr" value={tid} onChange={(e) => setTid(e.target.value)} className={input} />
                 </div>
                 <div>
                   <label htmlFor="bk-from" className={label}>{tp('paidFrom')}</label>

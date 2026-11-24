@@ -60,7 +60,7 @@ const schema = z.object({
   title: z.string().trim().max(80).optional().default(''),
   text: z.string().trim().max(120).optional().default(''),
   promoCode: z.string().trim().max(30).optional().default(''),
-  payment: z.object({ method: z.enum(['jazzcash', 'easypaisa', 'nayapay', 'bank']), transactionId: z.string().trim().min(4).max(40), paidFrom: z.string().trim().max(80).optional().default('') }).nullable().optional(),
+  payment: z.object({ method: z.enum(['jazzcash', 'easypaisa', 'nayapay', 'bank']), transactionId: z.string().trim().max(40).optional().default(""), paidFrom: z.string().trim().max(80).optional().default('') }).nullable().optional(),
   agree: z.literal(true),
 });
 
@@ -151,7 +151,7 @@ export async function createBannerBooking(form: FormData): Promise<{ statsToken:
       `insert into payments (purpose, banner_id, amount, method, transaction_id, paid_from, screenshot_path, status, items, subtotal, discount, promo_code_id)
        values ('banner', $1, $2, $3, $4, $5, $6, 'pending', $7, $8, $9, $10) returning id`,
       [
-        id, quote.total, d.payment?.method ?? 'free', d.payment?.transactionId ?? null, d.payment?.paidFrom || null, paths.shot,
+        id, quote.total, d.payment?.method ?? 'free', d.payment?.transactionId || null, d.payment?.paidFrom || null, paths.shot,
         JSON.stringify(quote.items), quote.subtotal, quote.discount, quote.promoId,
       ],
     );
