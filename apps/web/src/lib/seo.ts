@@ -72,7 +72,10 @@ export function ld(data: unknown): string {
   return JSON.stringify(data).replace(/</g, '\\u003c');
 }
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://apnaokara.pk').replace(/\/$/, '');
+/** The one public address. A vercel.app value in the env is ignored, so links, QR codes,
+ * canonicals and the sitemap always say apnaokara.pk. Local dev keeps its localhost value. */
+const envSite = (process.env.NEXT_PUBLIC_SITE_URL || '').trim().replace(/\/$/, '');
+export const SITE_URL = envSite && !/vercel\.app/i.test(envSite) ? envSite : 'https://apnaokara.pk';
 
 /** Known AI crawlers (robots.txt "AI crawlers" setting). */
 export const AI_BOTS = ['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot', 'Claude-User', 'PerplexityBot', 'Google-Extended', 'Applebot-Extended', 'CCBot', 'Bytespider', 'meta-externalagent'];
