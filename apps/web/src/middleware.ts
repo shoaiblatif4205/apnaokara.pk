@@ -3,7 +3,7 @@ import createMiddleware from 'next-intl/middleware';
 import { routing } from './i18n/routing';
 
 const intl = createMiddleware(routing);
-const MAIN_SITE = 'https://apnaokara.pk';
+const MAIN_SITE = 'https://www.apnaokara.pk';
 
 // Redirects from Admin -> SEO. The list is loaded from the API and kept for 2 minutes.
 type Rule = [from: string, to: string, status: number];
@@ -25,7 +25,7 @@ async function getRules(origin: string): Promise<Map<string, Rule>> {
 }
 
 export default async function middleware(req: NextRequest) {
-  // The live site has one address: apnaokara.pk. Old vercel.app links move there
+  // The live site has one address: www.apnaokara.pk. Old vercel.app links move there
   // (same page), so visitors, shared links and Google all end up on the real domain.
   const host = (req.headers.get('host') ?? '').toLowerCase();
   if (process.env.VERCEL_ENV === 'production' && host.endsWith('.vercel.app')) {
