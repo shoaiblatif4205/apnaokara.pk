@@ -154,7 +154,11 @@
     "extra": {
       "router": {
         "origin": "https://apnaokara.pk"
+      },
+      "eas": {
+        "projectId": "7e147ddc-316f-45c4-864a-16b48aa37e17"
       }
-    }
+    },
+    "owner": "apnaokarapk"
   }
 }
