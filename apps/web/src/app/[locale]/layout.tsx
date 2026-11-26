@@ -77,7 +77,8 @@ export default async function LocaleLayout({
   ]);
 
   // Same name, areas and contact everywhere: helps Google and AI tools understand who we are (GEO).
-  const sameAs = Object.values(social ?? {}).filter((v): v is string => !!v && /^https:\/\//.test(v));
+  // Profile pages only (Facebook, Instagram, YouTube...); WhatsApp invite links are not profiles
+  const sameAs = Object.values(social ?? {}).filter((v): v is string => !!v && /^https:\/\//.test(v) && !/whatsapp\.com/i.test(v));
   const siteLd = {
     '@context': 'https://schema.org',
     '@graph': [
