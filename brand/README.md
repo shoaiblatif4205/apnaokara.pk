@@ -26,3 +26,27 @@ PNG files are generated from code: `npm run images` (see `scripts/make-images.mj
 | Page | `#F9FAFB` | Background |
 
 **Fonts:** Inter (English), Noto Nastaliq Urdu (Urdu).
+## Social media posts (`social/posts/`)
+
+Six ready posts, 1080x1080, for Instagram, Facebook and WhatsApp. Each one comes in Urdu
+(`urdu/post-N-ur.png`) and English (`english/post-N-en.png`).
+
+| # | Post |
+|---|---|
+| 1 | Launch: "Apna Okara is now online" (photo collage) |
+| 2 | How to post an ad in 2 minutes |
+| 3 | Find service providers (electrician, plumber, AC, mechanic, tutor, driver) |
+| 4 | 5 rules for safe buying and selling |
+| 5 | Rishta: respect and privacy |
+| 6 | Follow the WhatsApp channel |
+
+Photos are free Pexels photos (commercial use allowed, no credit needed). The ads shown on the
+phone in post 6 are examples only.
+
+To change a post, edit `social/posts/source/posts.html`, then make the picture again with Edge or Chrome:
+
+```
+msedge --headless=new --hide-scrollbars --window-size=1080,1080 --virtual-time-budget=5000 --screenshot=post.png "file:///D:/Project/Apna%20Okara/brand/social/posts/source/posts.html?n=1&lang=ur"
+```
+
+`n` = post number (1-6), `lang` = `ur` or `en`.

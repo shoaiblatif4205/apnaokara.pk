@@ -1,0 +1,262 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Apna Okara posts</title>
+<style>
+@font-face { font-family: 'Nastaliq'; src: url('../../../../node_modules/@expo-google-fonts/noto-nastaliq-urdu/NotoNastaliqUrdu_400Regular.ttf'); font-weight: 400; }
+@font-face { font-family: 'Nastaliq'; src: url('../../../../node_modules/@expo-google-fonts/noto-nastaliq-urdu/NotoNastaliqUrdu_700Bold.ttf'); font-weight: 700; }
+:root { --g: #15803D; --gd: #0F5C2C; --gl: #DCFCE7; --o: #F97316; --od: #C2410C; --ol: #FFEDD5; --ink: #1F2937; --lh: 1.75; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1080px; overflow: hidden; background: #fff; }
+body.ur { font-family: 'Nastaliq', serif; direction: rtl; }
+body.en { font-family: 'Segoe UI', Arial, sans-serif; direction: ltr; --lh: 1.12; }
+body.en h1 { font-weight: 800; letter-spacing: -1.5px; }
+body.en p, body.en small, body.en li, body.en b { line-height: 1.3; }
+body { color: var(--ink); }
+.post { width: 1080px; height: 1080px; position: relative; overflow: hidden; }
+.lat { font-family: 'Segoe UI', Arial, sans-serif; direction: ltr; unicode-bidi: isolate; }
+.emoji { font-family: 'Segoe UI Emoji', sans-serif; }
+.flow { position: absolute; top: 60px; right: 60px; left: 60px; bottom: 150px; display: flex; flex-direction: column; gap: 22px; }
+.bar { position: absolute; left: 0; right: 0; bottom: 0; height: 120px; display: flex; align-items: center; justify-content: space-between; padding: 0 60px; direction: ltr; }
+.logo { display: flex; align-items: center; gap: 14px; white-space: nowrap; }
+.logo b { font-family: 'Segoe UI', Arial, sans-serif; font-weight: 800; font-size: 40px; letter-spacing: -0.5px; line-height: 1; }
+.url { font-family: 'Segoe UI', Arial, sans-serif; font-weight: 700; font-size: 32px; padding: 12px 28px; border-radius: 999px; white-space: nowrap; }
+.photo { background-size: cover; background-position: center; }
+
+/* ---------- 1 launch: photo mosaic ---------- */
+#p1 { background: var(--gd); color: #fff; }
+#p1 .mosaic { position: absolute; inset: 0 0 120px 0; display: grid; grid-template-columns: 1.2fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; gap: 8px; }
+#p1 .mosaic div:nth-child(1) { grid-row: span 2; }
+#p1 .mosaic div:nth-child(5) { grid-column: span 2; }
+#p1 .shade { position: absolute; inset: 0 0 120px 0; background: linear-gradient(180deg, rgba(15,92,44,.15) 0%, rgba(15,92,44,.55) 38%, rgba(10,60,30,.96) 72%, #0A3C1E 100%); }
+#p1 .badge { position: absolute; top: 50px; inset-inline-start: 60px; background: var(--o); color: #fff; font-weight: 700; font-size: 36px; padding: 4px 30px 18px; border-radius: 999px; box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+body.en #p1 .badge { padding: 12px 30px; font-size: 32px; letter-spacing: 1px; text-transform: uppercase; }
+#p1 .copy { position: absolute; inset-inline: 60px; bottom: 165px; }
+#p1 h1 { font-size: 100px; line-height: var(--lh); font-weight: 700; text-shadow: 0 4px 24px rgba(0,0,0,.35); }
+body.en #p1 h1 { font-size: 108px; }
+#p1 h1 span { color: #FFB877; }
+#p1 .cities { display: flex; gap: 14px; margin-top: 18px; flex-wrap: wrap; }
+#p1 .cities span { background: rgba(255,255,255,.16); border: 2px solid rgba(255,255,255,.35); border-radius: 999px; padding: 0 26px 12px; font-size: 34px; }
+body.en #p1 .cities span { padding: 8px 26px; font-weight: 600; }
+#p1 .bar { background: #fff; color: var(--g); }
+#p1 .bar .url { background: var(--o); color: #fff; }
+
+/* ---------- 2 how to post ---------- */
+#p2 { background: var(--ol); }
+#p2 .top { position: absolute; top: 0; left: 0; right: 0; height: 345px; background: var(--od); color: #fff; padding: 50px 60px 0; clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%); }
+#p2 .top small { font-size: 38px; color: var(--ol); display: block; }
+#p2 .top h1 { font-size: 74px; line-height: var(--lh); font-weight: 700; }
+body.en #p2 .top h1 { font-size: 84px; margin-top: 14px; }
+#p2 .top h1 span { background: #fff; color: var(--od); padding: 0 22px 14px; border-radius: 18px; white-space: nowrap; }
+body.en #p2 .top h1 span { padding: 4px 22px 8px; }
+#p2 .flow { top: 365px; bottom: 140px; gap: 18px; }
+#p2 .steps { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; flex: 1; }
+#p2 .step { background: #fff; border-radius: 30px; padding: 20px 26px 22px; box-shadow: 0 8px 24px rgba(194,65,12,.12); position: relative; }
+#p2 .num { width: 60px; height: 60px; border-radius: 50%; background: var(--g); color: #fff; font-family: 'Segoe UI', Arial, sans-serif; font-weight: 800; font-size: 32px; display: flex; align-items: center; justify-content: center; }
+#p2 .step .emoji { position: absolute; inset-inline-end: 26px; top: 20px; font-size: 52px; }
+#p2 .step p { font-size: 31px; line-height: 1.75; margin-top: 10px; font-weight: 700; }
+body.en #p2 .step p { font-size: 36px; margin-top: 18px; line-height: 1.25; }
+#p2 .step p .lat { font-size: 28px; color: var(--g); }
+#p2 .note { font-size: 31px; text-align: center; color: var(--od); }
+body.en #p2 .note { font-weight: 600; }
+#p2 .bar { background: var(--g); color: #fff; height: 110px; }
+#p2 .bar .url { background: #fff; color: var(--g); }
+
+/* ---------- 3 services: photo tiles ---------- */
+#p3 { background: #0B3B1F; color: #fff; }
+#p3 .glow { position: absolute; width: 900px; height: 900px; border-radius: 50%; background: radial-gradient(circle, rgba(249,115,22,.35), transparent 65%); top: -380px; inset-inline-end: -300px; }
+#p3 h1 { font-size: 80px; line-height: var(--lh); font-weight: 700; margin-bottom: 18px; }
+body.en #p3 h1 { font-size: 88px; margin-bottom: 8px; }
+#p3 h1 span { color: var(--o); }
+#p3 .q p { font-size: 36px; color: #BBF7D0; line-height: 1.8; }
+body.en #p3 .q p { line-height: 1.3; }
+#p3 .grid { margin-top: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+#p3 .tile { background: #fff; color: var(--ink); border-radius: 26px; overflow: hidden; }
+#p3 .tile .photo { height: 150px; }
+#p3 .tile b { font-size: 32px; line-height: 1.85; display: block; text-align: center; padding: 0 8px 12px; }
+body.en #p3 .tile b { font-size: 30px; padding: 12px 8px; line-height: 1.2; }
+#p3 .stars { text-align: center; font-size: 32px; color: #FDE68A; }
+#p3 .bar { color: #fff; border-top: 2px solid rgba(255,255,255,.15); }
+#p3 .bar .url { background: var(--o); color: #fff; }
+
+/* ---------- 4 safety ---------- */
+#p4 { background: linear-gradient(160deg, #EFF6FF 0%, #F0FDF4 100%); }
+#p4 .flow { gap: 18px; }
+#p4 .headrow { display: flex; align-items: center; gap: 30px; }
+#p4 .shield { flex: none; width: 150px; height: 172px; }
+#p4 .head { flex: 1; }
+#p4 .head small { font-size: 34px; color: var(--g); font-weight: 700; }
+#p4 .head h1 { font-size: 66px; line-height: 1.7; font-weight: 700; }
+body.en #p4 .head h1 { font-size: 74px; line-height: 1.05; margin-top: 8px; }
+#p4 .card { background: #fff; border-radius: 36px; padding: 6px 40px; box-shadow: 0 16px 40px rgba(21,128,61,.14); flex: 1; display: flex; flex-direction: column; justify-content: space-around; }
+#p4 .row { display: flex; align-items: center; gap: 26px; padding: 0 0 12px; border-bottom: 2px dashed #E5E7EB; font-size: 35px; }
+body.en #p4 .row { padding: 14px 0; font-size: 36px; font-weight: 600; }
+#p4 .row:last-child { border: 0; }
+#p4 .tick { flex: none; width: 52px; height: 52px; border-radius: 50%; background: var(--g); color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Segoe UI', Arial; font-size: 30px; font-weight: 800; margin-top: 12px; }
+body.en #p4 .tick { margin-top: 0; }
+#p4 .bar { background: var(--g); color: #fff; }
+#p4 .bar .url { background: #fff; color: var(--g); }
+
+/* ---------- 5 rishta ---------- */
+#p5 { background: radial-gradient(circle at 50% 30%, #9D174D 0, #6B0F35 60%, #3F0820 100%); color: #fff; }
+#p5 .frame { position: absolute; inset: 36px; border: 3px solid rgba(253,224,171,.55); border-radius: 40px; }
+#p5 .frame::after { content: ''; position: absolute; inset: 14px; border: 1.5px solid rgba(253,224,171,.3); border-radius: 30px; }
+#p5 .flow { top: 90px; right: 110px; left: 110px; bottom: 170px; text-align: center; gap: 14px; }
+#p5 .rings { width: 190px; height: 120px; margin: 0 auto; }
+#p5 .k { font-size: 42px; color: #FDE0AB; }
+body.en #p5 .k { font-size: 30px; letter-spacing: 6px; text-transform: uppercase; font-weight: 600; }
+#p5 h1 { font-size: 66px; line-height: var(--lh); font-weight: 700; }
+body.en #p5 h1 { font-size: 72px; line-height: 1.1; font-family: Georgia, 'Times New Roman', serif; font-weight: 700; letter-spacing: -0.5px; }
+#p5 .pts { margin-top: auto; display: grid; gap: 12px; }
+#p5 .pt { background: rgba(255,255,255,.1); border: 1.5px solid rgba(253,224,171,.4); border-radius: 22px; padding: 2px 26px 14px; font-size: 33px; display: flex; gap: 18px; align-items: center; text-align: start; }
+body.en #p5 .pt { padding: 16px 26px; font-size: 32px; }
+#p5 .pt i { flex: none; width: 16px; height: 16px; background: #FDE0AB; transform: rotate(45deg); margin-top: 10px; }
+body.en #p5 .pt i { margin-top: 0; }
+#p5 .bar { bottom: 40px; padding: 0 90px; }
+#p5 .bar .logo b { color: #FDE0AB; }
+#p5 .bar .url { background: #FDE0AB; color: #6B0F35; }
+
+/* ---------- 6 whatsapp channel ---------- */
+#p6 { background: #075E54; color: #fff; }
+#p6 .wa-bg { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.06) 3px, transparent 3px); background-size: 40px 40px; }
+#p6 .flow { left: auto; right: auto; width: 540px; top: 70px; bottom: 150px; }
+body.ur #p6 .flow { right: 60px; }
+body.en #p6 .flow { left: 60px; }
+#p6 .txt small { font-size: 36px; color: #A7F3D0; }
+body.en #p6 .txt small { font-size: 28px; letter-spacing: 4px; text-transform: uppercase; font-weight: 700; }
+#p6 .txt h1 { font-size: 58px; line-height: var(--lh); font-weight: 700; }
+body.en #p6 .txt h1 { font-size: 68px; margin: 10px 0 6px; }
+#p6 .txt h1 span { color: #25D366; white-space: nowrap; }
+body.en #p6 .txt h1 span { white-space: normal; }
+#p6 .txt ul { list-style: none; margin-top: 12px; }
+#p6 .txt li { font-size: 32px; line-height: 1.95; }
+body.en #p6 .txt li { line-height: 1.6; font-weight: 600; }
+#p6 .txt li::before { content: '✓  '; color: #25D366; font-family: 'Segoe UI', Arial; font-weight: 800; }
+#p6 .phone { position: absolute; top: 100px; width: 380px; height: 740px; background: #111; border-radius: 56px; padding: 16px; box-shadow: 0 30px 60px rgba(0,0,0,.4); }
+body.ur #p6 .phone { left: 70px; transform: rotate(-5deg); }
+body.en #p6 .phone { right: 70px; transform: rotate(5deg); }
+#p6 .screen { width: 100%; height: 100%; border-radius: 42px; background: #ECE5DD; overflow: hidden; }
+#p6 .wa-head { background: #075E54; height: 96px; display: flex; align-items: center; gap: 12px; padding: 22px 20px 0; direction: ltr; }
+#p6 .wa-head .av { width: 48px; height: 48px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; }
+#p6 .wa-head b { font-family: 'Segoe UI', Arial; font-size: 22px; display: block; }
+#p6 .wa-head i { font-family: 'Segoe UI', Arial; font-size: 15px; color: #A7F3D0; font-style: normal; }
+#p6 .msg { margin: 16px 16px 0; background: #fff; color: var(--ink); border-radius: 18px; padding: 10px; box-shadow: 0 2px 4px rgba(0,0,0,.08); }
+#p6 .msg .photo { height: 150px; border-radius: 12px; }
+#p6 .msg p { font-size: 21px; line-height: 1.9; padding: 0 6px; }
+body.en #p6 .msg p { font-size: 20px; line-height: 1.3; padding: 8px 6px 2px; font-weight: 600; }
+#p6 .msg .pr { font-family: 'Segoe UI', Arial; font-weight: 800; color: var(--g); font-size: 21px; direction: ltr; padding: 0 6px; }
+body.ur #p6 .msg .pr { text-align: right; }
+#p6 .cta { margin-top: auto; background: #25D366; color: #053B32; border-radius: 26px; padding: 8px 30px 22px; font-size: 40px; font-weight: 700; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+body.en #p6 .cta { padding: 22px 30px; font-weight: 800; }
+#p6 .bar { background: #fff; color: #075E54; height: 110px; }
+#p6 .bar .url { background: #075E54; color: #fff; font-size: 30px; }
+
+#p1 .mosaic { inset: 0 0 auto 0; height: 600px; grid-template-columns: 1.25fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 6px; }
+#p1 .mosaic div:nth-child(1) { grid-row: span 2; }
+#p1 .mosaic div:nth-child(5) { grid-column: auto; }
+#p1 .shade { inset: 0 0 120px 0; background: linear-gradient(180deg, rgba(0,0,0,.18) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 40%, rgba(10,60,30,.75) 52%, #0A3C1E 60%, #0A3C1E 100%); }
+#p1 .copy { bottom: 150px; }
+#p1 h1 { font-size: 92px; }
+body.en #p1 h1 { font-size: 104px; }
+
+body.en #p2 .top h1 { font-size: 78px; line-height: 1.32; margin-top: 6px; }
+body.en #p5 .pts { margin-top: 70px; }
+body.en #p5 .flow { justify-content: center; }
+body.en #p6 .txt li { font-size: 30px; }
+#p1 .bigpin { position: absolute; width: 300px; height: 300px; bottom: 170px; opacity: .14; }
+body.ur #p1 .bigpin { left: 60px; }
+body.en #p1 .bigpin { right: 60px; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="pin" viewBox="0 0 48 48"><path d="M24 3C15.2 3 8 10 8 18.8 8 30.5 24 45 24 45s16-14.5 16-26.2C40 10 32.8 3 24 3z" fill="#15803D"/><circle cx="24" cy="19" r="9" fill="#FFFFFF"/><path d="M19 21.5h10l-1.2 4h-7.6z" fill="#F97316"/><path d="M20.5 21.5c0-3 1.6-5.5 3.5-5.5s3.5 2.5 3.5 5.5" fill="none" stroke="#F97316" stroke-width="1.8"/></symbol>
+  <symbol id="pinw" viewBox="0 0 48 48"><path d="M24 3C15.2 3 8 10 8 18.8 8 30.5 24 45 24 45s16-14.5 16-26.2C40 10 32.8 3 24 3z" fill="#FFFFFF"/><circle cx="24" cy="19" r="9" fill="#15803D"/><path d="M19 21.5h10l-1.2 4h-7.6z" fill="#F97316"/><path d="M20.5 21.5c0-3 1.6-5.5 3.5-5.5s3.5 2.5 3.5 5.5" fill="none" stroke="#F97316" stroke-width="1.8"/></symbol>
+</svg>
+<div id="root"></div>
+<script>
+const q = new URLSearchParams(location.search);
+const n = q.get('n') || '1';
+const L = q.get('lang') === 'en' ? 'en' : 'ur';
+document.documentElement.lang = L;
+document.body.className = L;
+const ph = (x) => `<div class="photo" style="background-image:url('img/${x}.jpg')"></div>`;
+const logo = (style) => `<div class="logo"><svg width="54" height="54"><use href="#${style === 'green' ? 'pin' : style === 'two' ? 'pin' : 'pinw'}"/></svg><b>${style === 'two' ? 'Apna <span style="color:#C2410C">Okara</span>' : 'Apna Okara'}</b></div>`;
+
+const T = {
+  ur: {
+    badge: 'نیا آغاز', h1: 'اپنا اوکاڑہ<br><span>اب آن لائن!</span>', cities: ['اوکاڑہ', 'ساہیوال', 'پاکپتن'],
+    p2small: 'اپنی چیز بیچنی ہے؟', p2h1: 'اشتہار لگائیں <span>صرف 2 منٹ</span>',
+    steps: ['ویب سائٹ کھولیں<br><span class="lat">apnaokara.pk</span>', '«اشتہار لگائیں»<br>دبائیں', 'تصویر، قیمت اور<br>اپنا نمبر لکھیں', 'بھیج دیں،<br>بس!'],
+    note: 'نہ اکاؤنٹ، نہ پاس ورڈ · خریدار سیدھا آپ کو کال کریں گے',
+    p3h1: 'کاریگر چاہیے؟ <span>ایک کلک!</span>', p3p: 'اپنے علاقے کے بھروسے والے کاریگر، ایک جگہ پر',
+    tiles: [['electrician', 'الیکٹریشن'], ['plumber', 'پلمبر'], ['ac', 'اے سی والے'], ['mechanic', 'مکینک'], ['tutor', 'ٹیوٹر'], ['driver', 'ڈرائیور']],
+    stars: 'لوگوں کے ریویو دیکھ کر چنیں',
+    p4small: 'اپنا اوکاڑہ کی طرف سے', p4h1: 'محفوظ خرید و فروخت<br>کے 5 اصول',
+    rules: ['چیز خود دیکھ کر ہی پیسے دیں', 'دن کے وقت، بھری جگہ پر ملیں', 'پیسے پہلے بھیجنے سے بچیں', 'بہت سستی چیز ہو تو ہوشیار رہیں', 'کچھ غلط لگے تو اشتہار رپورٹ کریں'],
+    p5k: 'اپنا اوکاڑہ رشتہ', p5h1: 'عزت اور پردے کے ساتھ<br>اپنے علاقے میں رشتہ',
+    p5pts: ['تصویر اور نمبر محفوظ رہتے ہیں', 'ہر پروفائل ہماری ٹیم چیک کرتی ہے', 'گھر والوں کے لیے آسان'],
+    p6small: 'واٹس ایپ چینل', p6h1: 'روزانہ نئے اشتہار<br><span>سیدھے آپ کے فون پر</span>',
+    p6li: ['روز کے نئے اور سستے اشتہار', 'اپنے شہر کی خاص آفرز', 'کوئی اسپام نہیں، نمبر چھپا رہتا ہے'],
+    msgs: [['bike', 'ہونڈا سی ڈی 70، 2022 ماڈل، اوکاڑہ', 'Rs 1,65,000'], ['phone', 'آئی فون 13، پی ٹی اے، ساہیوال', 'Rs 1,18,000'], ['house', '5 مرلہ مکان، ماڈل ٹاؤن', '']],
+    cta: 'ابھی فالو کریں',
+  },
+  en: {
+    badge: 'Now live', h1: 'Apna Okara<br><span>is now online!</span>', cities: ['Okara', 'Sahiwal', 'Pakpattan'],
+    p2small: 'Want to sell something?', p2h1: 'Post your ad in <span>2 minutes</span>',
+    steps: ['Open the website<br><span class="lat">apnaokara.pk</span>', 'Tap<br>“Post Ad”', 'Add a photo, price<br>and your number', 'Send it.<br>That’s it!'],
+    note: 'No account, no password · Buyers call you directly',
+    p3h1: 'Need a <span>trusted hand?</span>', p3p: 'Local service providers near you, all in one place',
+    tiles: [['electrician', 'Electrician'], ['plumber', 'Plumber'], ['ac', 'AC repair'], ['mechanic', 'Mechanic'], ['tutor', 'Home tutor'], ['driver', 'Driver']],
+    stars: 'Choose by real reviews from people',
+    p4small: 'From Apna Okara', p4h1: '5 rules for safe<br>buying & selling',
+    rules: ['See the item before you pay', 'Meet in daytime, in a busy place', 'Never send money in advance', 'Too cheap to be true? Be careful', 'Something wrong? Report the ad'],
+    p5k: 'Apna Okara Rishta', p5h1: 'Find a match with<br>respect and privacy',
+    p5pts: ['Your photos and number stay private', 'Every profile is checked by our team', 'Made easy for families'],
+    p6small: 'WhatsApp Channel', p6h1: 'New ads every day, <span>right on your phone</span>',
+    p6li: ['Fresh, low-priced ads daily', 'Special offers in your city', 'No spam, your number stays hidden'],
+    msgs: [['bike', 'Honda CD 70, 2022 model, Okara', 'Rs 165,000'], ['phone', 'iPhone 13, PTA approved, Sahiwal', 'Rs 118,000'], ['house', '5 marla house, Model Town', '']],
+    cta: 'Follow now',
+  },
+}[L];
+
+const posts = {
+  1: `<section class="post" id="p1">
+    <div class="mosaic">${['house', 'bike', 'phone', 'cow', 'car'].map(ph).join('')}</div>
+    <div class="shade"></div>
+    <svg class="bigpin"><use href="#pinw"/></svg>
+    <div class="badge">${T.badge}</div>
+    <div class="copy"><h1>${T.h1}</h1><div class="cities">${T.cities.map((c) => `<span>${c}</span>`).join('')}</div></div>
+    <div class="bar">${logo('two')}<div class="url">www.apnaokara.pk</div></div></section>`,
+  2: `<section class="post" id="p2">
+    <div class="top"><small>${T.p2small}</small><h1>${T.p2h1}</h1></div>
+    <div class="flow"><div class="steps">${T.steps.map((s, i) => `<div class="step"><div class="num">${i + 1}</div><span class="emoji">${['🌐', '➕', '📸', '✅'][i]}</span><p>${s}</p></div>`).join('')}</div>
+    <p class="note">${T.note}</p></div>
+    <div class="bar">${logo('white')}<div class="url">apnaokara.pk/${L}/post-ad</div></div></section>`,
+  3: `<section class="post" id="p3"><div class="glow"></div>
+    <div class="flow"><div class="q"><h1>${T.p3h1}</h1><p>${T.p3p}</p></div>
+    <div class="grid">${T.tiles.map(([x, t]) => `<div class="tile">${ph(x)}<b>${t}</b></div>`).join('')}</div>
+    <p class="stars"><span class="emoji">⭐⭐⭐⭐⭐</span> ${T.stars}</p></div>
+    <div class="bar">${logo('white')}<div class="url">www.apnaokara.pk</div></div></section>`,
+  4: `<section class="post" id="p4"><div class="flow">
+    <div class="headrow"><svg class="shield" viewBox="0 0 100 115"><path d="M50 4 92 20v34c0 28-19 48-42 57C27 102 8 82 8 54V20z" fill="#15803D"/><path d="M50 14 82 26v28c0 22-14 38-32 46-18-8-32-24-32-46V26z" fill="#22A653"/><path d="m32 57 12 12 25-27" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="head"><small>${T.p4small}</small><h1>${T.p4h1}</h1></div></div>
+    <div class="card">${T.rules.map((r) => `<div class="row"><span class="tick">✓</span>${r}</div>`).join('')}</div></div>
+    <div class="bar">${logo('white')}<div class="url">www.apnaokara.pk</div></div></section>`,
+  5: `<section class="post" id="p5"><div class="frame"></div><div class="flow">
+    <svg class="rings" viewBox="0 0 190 120" fill="none" stroke="#FDE0AB" stroke-width="7"><circle cx="72" cy="70" r="42"/><circle cx="118" cy="70" r="42"/><path d="M60 24l12-14 12 14-12 8z" fill="#FDE0AB" stroke-width="3"/></svg>
+    <p class="k">${T.p5k}</p><h1>${T.p5h1}</h1>
+    <div class="pts">${T.p5pts.map((p) => `<div class="pt"><i></i>${p}</div>`).join('')}</div></div>
+    <div class="bar">${logo('white')}<div class="url">apnaokara.pk/${L}/rishta</div></div></section>`,
+  6: `<section class="post" id="p6"><div class="wa-bg"></div>
+    <div class="phone"><div class="screen"><div class="wa-head"><div class="av"><svg width="34" height="34"><use href="#pin"/></svg></div><div><b>Apna Okara</b><i>WhatsApp Channel</i></div></div>
+    ${T.msgs.map(([x, t, p]) => `<div class="msg">${ph(x)}<p>${t}</p>${p ? `<div class="pr">${p}</div>` : ''}</div>`).join('')}</div></div>
+    <div class="flow"><div class="txt"><small>${T.p6small}</small><h1>${T.p6h1}</h1><ul>${T.p6li.map((l) => `<li>${l}</li>`).join('')}</ul></div>
+    <div class="cta">${T.cta} <span class="emoji">${L === 'ur' ? '👈' : '👉'}</span></div></div>
+    <div class="bar">${logo('green')}<div class="url">www.apnaokara.pk/${L}/community</div></div></section>`,
+};
+document.getElementById('root').innerHTML = posts[n];
+</script>
+</body>
+</html>
