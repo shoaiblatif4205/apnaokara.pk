@@ -5,7 +5,12 @@ import { getRishtaAccount } from '@/lib/rishta/session';
 import { RishtaLogin } from '@/components/rishta/RishtaLogin';
 import { Link, type AppLocale } from '@/i18n/routing';
 
-export const metadata: Metadata = { robots: { index: false, follow: false } };
+export async function generateMetadata(props: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const params = await props.params;
+  const t = await getTranslations({ locale: params.locale, namespace: 'rishta' });
+  const tc = await getTranslations({ locale: params.locale, namespace: 'common' });
+  return { title: `${tc('rishta')}: ${t('login')}`, robots: { index: false, follow: false } };
+}
 export const dynamic = 'force-dynamic';
 
 export default async function RishtaLoginPage(props: { params: Promise<{ locale: string }> }) {

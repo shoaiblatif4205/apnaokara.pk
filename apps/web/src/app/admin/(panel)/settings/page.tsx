@@ -38,6 +38,17 @@ function Text({ name, label, value, hint, urdu, type = 'text' }: { name: string;
   );
 }
 
+// Heading + "Show on website" switch for one payment method (missing value = shown)
+function PayToggle({ name, label, payments }: { name: string; label: string; payments: Obj | null }) {
+  const enabled = ((payments?.[name] as Obj | undefined)?.enabled as boolean | undefined) !== false;
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3 md:col-span-2">
+      <h3 className="font-bold">{label}</h3>
+      <Checkbox name={`${name}.enabled`} id={`f-${name}-enabled`} label="Show on website" defaultChecked={enabled} />
+    </div>
+  );
+}
+
 export default async function SettingsPage(props: { searchParams: Promise<{ saved?: string; error?: string }> }) {
   const searchParams = await props.searchParams;
   await requireAdmin();
@@ -69,13 +80,21 @@ export default async function SettingsPage(props: { searchParams: Promise<{ save
         <Text name="youtube" label="YouTube" value={get(social, 'youtube')} type="url" />
       </SettingForm>
 
-      <SettingForm settingKey="public.payment_accounts" title="Payment accounts" description="Shown to people when they pay for an ad. Leave a method empty to hide it.">
+      <SettingForm
+        settingKey="public.payment_accounts"
+        title="Payment accounts"
+        description="Choose which payment methods customers see. Untick “Show on website” to hide a method without deleting its number. A method with no number is always hidden."
+      >
+        <PayToggle name="jazzcash" label="JazzCash" payments={payments} />
         <Text name="jazzcash.title" label="JazzCash account title" value={get(payments, 'jazzcash.title')} />
         <Text name="jazzcash.number" label="JazzCash number" value={get(payments, 'jazzcash.number')} />
+        <PayToggle name="easypaisa" label="Easypaisa" payments={payments} />
         <Text name="easypaisa.title" label="Easypaisa account title" value={get(payments, 'easypaisa.title')} />
         <Text name="easypaisa.number" label="Easypaisa number" value={get(payments, 'easypaisa.number')} />
+        <PayToggle name="nayapay" label="NayaPay" payments={payments} />
         <Text name="nayapay.title" label="NayaPay account title" value={get(payments, 'nayapay.title')} />
         <Text name="nayapay.number" label="NayaPay number" value={get(payments, 'nayapay.number')} />
+        <PayToggle name="bank" label="Bank transfer" payments={payments} />
         <Text name="bank.bank_name" label="Bank name" value={get(payments, 'bank.bank_name')} />
         <Text name="bank.title" label="Bank account title" value={get(payments, 'bank.title')} />
         <Text name="bank.account" label="Bank account number" value={get(payments, 'bank.account')} />

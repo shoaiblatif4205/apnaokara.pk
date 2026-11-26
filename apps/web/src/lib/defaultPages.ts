@@ -136,7 +136,7 @@ The reason is shown in My Ads. Common reasons: unclear photos, wrong category, o
 Open My Ads, enter your reference number and phone, and tap Mark as sold.
 
 ### How do I pay?
-By JazzCash, Easypaisa or bank transfer. Add the transaction ID and a screenshot when posting.
+Send the amount to the account shown on the Post Ad page (JazzCash or Easypaisa), then add a screenshot of the payment.
 
 ### Is Rishta private?
 Yes. Names and numbers are never shown, photos are blurred, and numbers are shared only when both families say yes.`,
@@ -159,7 +159,7 @@ Yes. Names and numbers are never shown, photos are blurred, and numbers are shar
 میرے اشتہار کھولیں، ریفرنس نمبر اور فون لکھیں، اور بک گیا دبائیں۔
 
 ### ادائیگی کیسے کروں؟
-جاز کیش، ایزی پیسہ یا بینک ٹرانسفر سے۔ اشتہار لگاتے وقت ٹرانزیکشن آئی ڈی اور اسکرین شاٹ لگائیں۔
+اشتہار لگانے کے صفحے پر دکھائے گئے اکاؤنٹ (جاز کیش یا ایزی پیسہ) میں رقم بھیجیں، پھر ادائیگی کا اسکرین شاٹ لگائیں۔
 
 ### کیا رشتہ نجی ہے؟
 جی ہاں۔ نام اور نمبر کبھی نہیں دکھائے جاتے، تصاویر دھندلی رہتی ہیں، اور نمبر صرف دونوں خاندانوں کی ہاں کے بعد ملتا ہے۔`,
@@ -168,8 +168,8 @@ Yes. Names and numbers are never shown, photos are blurred, and numbers are shar
   pricing: {
     title: { en: 'Pricing', ur: 'قیمتیں' },
     body: {
-      en: 'Simple prices in rupees. Pay by JazzCash, Easypaisa or bank transfer. Prices may change during offers; the price shown when you post is the price you pay.',
-      ur: 'روپوں میں آسان قیمتیں۔ جاز کیش، ایزی پیسہ یا بینک ٹرانسفر سے ادائیگی کریں۔ آفر کے دنوں میں قیمتیں بدل سکتی ہیں؛ اشتہار لگاتے وقت جو قیمت دکھائی دے وہی دینی ہوگی۔',
+      en: 'Simple prices in rupees. Pay to the account shown when you post (JazzCash or Easypaisa). Prices may change during offers; the price shown when you post is the price you pay.',
+      ur: 'روپوں میں آسان قیمتیں۔ اشتہار لگاتے وقت دکھائے گئے اکاؤنٹ (جاز کیش یا ایزی پیسہ) میں ادائیگی کریں۔ آفر کے دنوں میں قیمتیں بدل سکتی ہیں؛ اشتہار لگاتے وقت جو قیمت دکھائی دے وہی دینی ہوگی۔',
     },
   },
   safety: {

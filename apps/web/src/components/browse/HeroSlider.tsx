@@ -34,7 +34,7 @@ export function HeroSlider({ slides, labels }: { slides: ReactNode[]; labels: { 
           <button
             type="button"
             onClick={() => setI((i - 1 + n) % n)}
-            className="absolute start-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-ink hover:bg-white rtl:rotate-180"
+            className="absolute bottom-2 start-2 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-ink hover:bg-white rtl:rotate-180"
             aria-label={labels.prev}
           >
             <ChevronLeft size={22} aria-hidden="true" />
@@ -42,12 +42,12 @@ export function HeroSlider({ slides, labels }: { slides: ReactNode[]; labels: { 
           <button
             type="button"
             onClick={() => setI((i + 1) % n)}
-            className="absolute end-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-ink hover:bg-white rtl:rotate-180"
+            className="absolute bottom-2 end-2 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-ink hover:bg-white rtl:rotate-180"
             aria-label={labels.next}
           >
             <ChevronRight size={22} aria-hidden="true" />
           </button>
-          <div className="absolute bottom-3 start-1/2 flex -translate-x-1/2 gap-2 rtl:translate-x-1/2">
+          <div className="absolute bottom-5 start-1/2 flex -translate-x-1/2 gap-2 rtl:translate-x-1/2">
             {slides.map((_, k) => (
               <button
                 key={k}

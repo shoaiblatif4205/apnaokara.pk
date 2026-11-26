@@ -18,6 +18,7 @@ const SPECS: Record<string, Spec> = {
   },
   'public.payment_accounts': {
     text: ['jazzcash.title', 'jazzcash.number', 'easypaisa.title', 'easypaisa.number', 'nayapay.title', 'nayapay.number', 'bank.bank_name', 'bank.title', 'bank.account', 'bank.iban'],
+    bools: ['jazzcash.enabled', 'easypaisa.enabled', 'nayapay.enabled', 'bank.enabled'],
   },
   'public.offer_bar': { text: ['en', 'ur'], bools: ['enabled'] },
   'public.app_links': { text: ['play_store', 'app_store'], urls: ['play_store', 'app_store'] },

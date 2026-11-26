@@ -3,7 +3,7 @@ import { Link } from '@/i18n/routing';
 import { getBanners, getCategories, getCities, getLocalities, searchAds, type Cat, type SearchFilters } from '@/lib/public';
 import { named } from '@/lib/format';
 import { AdGrid } from './AdCard';
-import { BannerBox, BannerSlot } from './Banner';
+import { BannerBox } from './Banner';
 import { Breadcrumbs } from './Breadcrumbs';
 import { Filters } from './Filters';
 
@@ -62,7 +62,6 @@ export async function ListingsView({
 }) {
   const t = await getTranslations({ locale, namespace: 'browse' });
   const tc = await getTranslations({ locale, namespace: 'common' });
-  const th = await getTranslations({ locale, namespace: 'home' });
   const { filters, values } = filtersFromParams(searchParams);
   const citySlug = fixedCitySlug ?? filters.citySlug;
   const [cities, cats] = await Promise.all([getCities(), getCategories()]);
@@ -94,13 +93,12 @@ export async function ListingsView({
   return (
     <div className="container-site py-4">
       <Breadcrumbs items={crumbs} locale={locale} />
-      <div className="mt-3 h-[110px] md:h-[140px]">
-        {top ? (
+      {/* Paid strip only: no empty "your banner here" box above the ads */}
+      {top && (
+        <div className="mt-3 h-[110px] md:h-[140px]">
           <BannerBox banner={top} locale={locale} sponsoredLabel={sponsoredLabel} />
-        ) : (
-          <BannerSlot variant="strip" title={th('brandsTitle')} text={th('brandsText')} cta={th('brandsCta')} sponsoredLabel={sponsoredLabel} />
-        )}
-      </div>
+        </div>
+      )}
       <header className="mt-3">
         <h1 className="text-2xl font-bold md:text-3xl">{title}</h1>
         <p className="mt-1 text-sm text-ink-muted">{t('adsCount', { count: result.total })}</p>
@@ -157,13 +155,7 @@ export async function ListingsView({
             <AdGrid
               ads={result.ads}
               locale={locale}
-              sponsor={
-                feed ? (
-                  <BannerBox banner={feed} locale={locale} sponsoredLabel={sponsoredLabel} className="aspect-[3/4]" />
-                ) : (
-                  <BannerSlot variant="card" title={th('brandsTitle')} text={th('brandsText')} cta={th('brandsCta')} sponsoredLabel={sponsoredLabel} />
-                )
-              }
+              sponsor={feed ? <BannerBox banner={feed} locale={locale} sponsoredLabel={sponsoredLabel} className="aspect-[3/4]" /> : undefined}
             />
           ) : (
             <div className="card p-10 text-center text-ink-muted">{t('noAds')}</div>

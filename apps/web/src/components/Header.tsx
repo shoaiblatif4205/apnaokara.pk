@@ -11,12 +11,14 @@ import { LanguageSwitch } from './LanguageSwitch';
 export async function Header({ locale }: { locale: AppLocale }) {
   const tc = await getTranslations({ locale, namespace: 'common' });
   const tb = await getTranslations({ locale, namespace: 'browse' });
-  const [cats, cities, offer, free] = await Promise.all([
+  const [cats, cities, offer, free, apps] = await Promise.all([
     getCategories(),
     getCities(),
     getSetting<{ enabled?: boolean; en?: string; ur?: string }>('public.offer_bar'),
     getSetting<FreeModeSettings>('public.free_mode'),
+    getSetting<{ play_store?: string | null; app_store?: string | null }>('public.app_links'),
   ]);
+  const appLive = Boolean(apps?.play_store || apps?.app_store);
   const menuCategories = cats.filter((c) => c.show_on_home).slice(0, 9);
   const freeActive = free ? free.models.some((m) => isFreeNow(free, m, cats.find((c) => c.model === m && (!free.category_slugs?.length || free.category_slugs.includes(c.slug)))?.slug ?? '')) : false;
   const freeText = free ? (locale === 'ur' ? free.banner.ur || free.banner.en : free.banner.en || free.banner.ur) : '';
@@ -29,10 +31,12 @@ export async function Header({ locale }: { locale: AppLocale }) {
         <div className="container-site flex min-h-[36px] flex-wrap items-center justify-between gap-2 text-xs">
           <p>{tc('tagline')}</p>
           <nav className="flex items-center gap-4" aria-label="Top">
-            <Link href="/download" className="inline-flex items-center gap-1 hover:underline">
-              <Download size={14} aria-hidden="true" />
-              {tc('downloadApp')}
-            </Link>
+            {appLive && (
+              <Link href="/download" className="inline-flex items-center gap-1 hover:underline">
+                <Download size={14} aria-hidden="true" />
+                {tc('downloadApp')}
+              </Link>
+            )}
             <Link href="/advertise" className="inline-flex items-center gap-1 hover:underline">
               <Megaphone size={14} aria-hidden="true" />
               {tc('advertise')}

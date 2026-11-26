@@ -35,11 +35,17 @@ function FLink({ href, children }: { href: string; children: ReactNode }) {
 export async function Footer({ locale }: { locale: AppLocale }) {
   const tf = await getTranslations({ locale, namespace: 'footer' });
   const tc = await getTranslations({ locale, namespace: 'common' });
-  const [cats, cities, social] = await Promise.all([
+  const [cats, cities, social, apps] = await Promise.all([
     getCategories(),
     getCities(),
     getSetting<Record<string, string | null>>('public.social'),
+    getSetting<{ play_store?: string | null; app_store?: string | null }>('public.app_links'),
   ]);
+  // Store badges only once the app is published (Admin → Site settings → App links)
+  const storeLinks = [
+    ['Google Play', apps?.play_store],
+    ['App Store', apps?.app_store],
+  ].filter(([, href]) => href) as [string, string][];
   const services = cats.find((c) => c.slug === 'services');
   const business = cats.find((c) => c.slug === 'business');
   const popular = cats.filter((c) => c.show_on_home && c.model !== 'services' && c.model !== 'business').slice(0, 8);
@@ -71,10 +77,15 @@ export async function Footer({ locale }: { locale: AppLocale }) {
               ))}
             </ul>
           )}
-          <div className="mt-4 flex flex-wrap gap-2 text-sm">
-            <span className="rounded-md border border-white/30 px-3 py-2">Google Play · {tc('comingSoon')}</span>
-            <span className="rounded-md border border-white/30 px-3 py-2">App Store · {tc('comingSoon')}</span>
-          </div>
+          {storeLinks.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-2 text-sm">
+              {storeLinks.map(([name, href]) => (
+                <a key={name} href={href} target="_blank" rel="noopener noreferrer" className="rounded-md border border-white/30 px-3 py-2 hover:bg-white/10">
+                  {name}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* 2. Popular categories */}

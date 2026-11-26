@@ -6,7 +6,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link, type AppLocale } from '@/i18n/routing';
 import { CategoryIcon } from '@/components/CategoryIcon';
 import { AdCard, AdGrid } from '@/components/browse/AdCard';
-import { BannerBox, BannerSlot } from '@/components/browse/Banner';
+import { BannerBox } from '@/components/browse/Banner';
 import { HeroSlider } from '@/components/browse/HeroSlider';
 import {
   featuredAds,
@@ -43,7 +43,7 @@ export default async function HomePage(props: { params: Promise<{ locale: string
   const t = await getTranslations({ locale, namespace: 'browse' });
   const tr = await getTranslations({ locale, namespace: 'rishta' });
 
-  const [sections, cats, cities, banners, featured, fresh, services, businesses, jobs, social, rishtaPreview, posts] = await Promise.all([
+  const [sections, cats, cities, banners, featured, fresh, services, businesses, jobs, social, apps, rishtaPreview, posts] = await Promise.all([
     getHomeSections(),
     getCategories(),
     getCities(),
@@ -54,6 +54,7 @@ export default async function HomePage(props: { params: Promise<{ locale: string
     topProviders('business', 4),
     latestAds({ limit: 6, model: 'jobs' }),
     getSetting<Record<string, string | null>>('public.social'),
+    getSetting<{ play_store?: string | null; app_store?: string | null }>('public.app_links'),
     previewProfiles(4),
     latestPosts(locale, 3),
   ]);
@@ -80,7 +81,7 @@ export default async function HomePage(props: { params: Promise<{ locale: string
 
   // ----- hero -----
   const ourSlide = (
-    <div className="flex h-full min-h-[260px] flex-col justify-center rounded-2xl bg-brand p-6 text-white md:p-10">
+    <div className="flex h-full min-h-[260px] flex-col justify-center rounded-2xl bg-brand p-6 pb-14 text-white md:p-10 md:pb-14">
       <h1 className="text-3xl font-extrabold md:text-4xl">{th('heroTitle')}</h1>
       <p className="mt-3 max-w-xl text-white/90 md:text-lg">{th('heroText')}</p>
       <div className="mt-6 flex flex-wrap gap-3">
@@ -100,27 +101,18 @@ export default async function HomePage(props: { params: Promise<{ locale: string
 
   const render: Record<string, () => ReactNode> = {
     hero: () => (
-      <section className="container-site mt-4 grid gap-3 lg:grid-cols-3" aria-label={th('heroTitle')}>
-        <div className="lg:col-span-2">
-          <HeroSlider
-            slides={[
-              ourSlide,
-              ...(by('hero_slider').length
-                ? by('hero_slider').map(slideFor)
-                : [<BannerSlot key="ad-slide" variant="slide" title={th('brandsTitle')} text={th('brandsText')} cta={th('brandsCta')} sponsoredLabel={sponsored} />]),
-            ]}
-            labels={{ prev: t('prev'), next: t('next'), slide: th('heroTitle') }}
-          />
+      // No empty "your banner here" boxes: the hero is full width until a brand books a place
+      <section className={`container-site mt-4 grid gap-3 ${side.length ? 'lg:grid-cols-3' : ''}`} aria-label={th('heroTitle')}>
+        <div className={side.length ? 'lg:col-span-2' : ''}>
+          <HeroSlider slides={[ourSlide, ...by('hero_slider').map(slideFor)]} labels={{ prev: t('prev'), next: t('next'), slide: th('heroTitle') }} />
         </div>
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
-          {[0, 1].map((i) =>
-            side[i] ? (
-              <BannerBox key={i} banner={side[i]} locale={locale} sponsoredLabel={sponsored} />
-            ) : (
-              <BannerSlot key={i} variant="box" title={th('brandsTitle')} cta={th('brandsCta')} sponsoredLabel={sponsored} />
-            ),
-          )}
-        </div>
+        {side.length > 0 && (
+          <div className={`grid gap-3 ${side.length > 1 ? 'grid-cols-2 lg:grid-cols-1' : ''}`}>
+            {side.map((b) => (
+              <BannerBox key={b.id} banner={b} locale={locale} sponsoredLabel={sponsored} />
+            ))}
+          </div>
+        )}
       </section>
     ),
 
@@ -194,15 +186,12 @@ export default async function HomePage(props: { params: Promise<{ locale: string
       </section>
     ),
 
-    wide_banner: () => (
-      <section className="container-site mt-10 h-[120px] md:h-[160px]">
-        {strip ? (
+    wide_banner: () =>
+      strip ? (
+        <section className="container-site mt-10 h-[120px] md:h-[160px]">
           <BannerBox banner={strip} locale={locale} sponsoredLabel={sponsored} />
-        ) : (
-          <BannerSlot variant="strip" title={th('brandsTitle')} text={th('brandsText')} cta={th('brandsCta')} sponsoredLabel={sponsored} />
-        )}
-      </section>
-    ),
+        </section>
+      ) : null,
 
     fresh_ads: () => (
       <section className="container-site mt-10" aria-labelledby="h-fresh">
@@ -212,13 +201,7 @@ export default async function HomePage(props: { params: Promise<{ locale: string
             <AdGrid
               ads={fresh}
               locale={locale}
-              sponsor={
-                feed ? (
-                  <BannerBox banner={feed} locale={locale} sponsoredLabel={sponsored} className="aspect-[3/4]" />
-                ) : (
-                  <BannerSlot variant="card" title={th('brandsTitle')} text={th('brandsText')} cta={th('brandsCta')} sponsoredLabel={sponsored} />
-                )
-              }
+              sponsor={feed ? <BannerBox banner={feed} locale={locale} sponsoredLabel={sponsored} className="aspect-[3/4]" /> : undefined}
             />
           ) : (
             <div className="card p-8 text-center text-ink-muted">{th('emptyAds')}</div>
@@ -383,30 +366,36 @@ export default async function HomePage(props: { params: Promise<{ locale: string
       </section>
     ),
 
-    community_app: () => (
-      <section className="container-site mt-10 grid gap-3 md:grid-cols-2">
-        <div className="card flex flex-col gap-3 p-6">
-          <MessageCircle size={28} className="text-brand" aria-hidden="true" />
-          <h2 className="text-lg font-bold">{th('communityTitle')}</h2>
-          <p className="text-ink-muted">{th('communityText')}</p>
-          {social?.whatsapp_group || social?.whatsapp_channel ? (
-            <a href={(social.whatsapp_group || social.whatsapp_channel)!} target="_blank" rel="noopener noreferrer" className="btn-primary self-start">
-              {th('communityCta')}
-            </a>
-          ) : (
-            <Link href="/community" className="btn-primary self-start">
-              {th('communityCta')}
-            </Link>
+    // Each card shows only when it has a real link (Admin → Site settings: Social links / App links)
+    community_app: () => {
+      const group = social?.whatsapp_group || social?.whatsapp_channel;
+      const store = apps?.play_store || apps?.app_store;
+      if (!group && !store) return null;
+      return (
+        <section className={`container-site mt-10 grid gap-3 ${group && store ? 'md:grid-cols-2' : ''}`}>
+          {group && (
+            <div className="card flex flex-col gap-3 p-6">
+              <MessageCircle size={28} className="text-brand" aria-hidden="true" />
+              <h2 className="text-lg font-bold">{th('communityTitle')}</h2>
+              <p className="text-ink-muted">{th('communityText')}</p>
+              <a href={group} target="_blank" rel="noopener noreferrer" className="btn-primary self-start">
+                {th('communityCta')}
+              </a>
+            </div>
           )}
-        </div>
-        <div className="card flex flex-col gap-3 p-6">
-          <Smartphone size={28} className="text-accent" aria-hidden="true" />
-          <h2 className="text-lg font-bold">{th('appTitle')}</h2>
-          <p className="text-ink-muted">{th('appText')}</p>
-          <span className="text-sm font-semibold text-ink-muted">{tc('comingSoon')}</span>
-        </div>
-      </section>
-    ),
+          {store && (
+            <div className="card flex flex-col gap-3 p-6">
+              <Smartphone size={28} className="text-accent" aria-hidden="true" />
+              <h2 className="text-lg font-bold">{th('appTitle')}</h2>
+              <p className="text-ink-muted">{th('appText')}</p>
+              <Link href="/download" className="btn-outline self-start">
+                {tc('downloadApp')}
+              </Link>
+            </div>
+          )}
+        </section>
+      );
+    },
 
     blog: () => (
       <section className="container-site mt-10" aria-labelledby="h-blog">
@@ -501,6 +490,7 @@ async function Seasonal({ locale, config, title }: { locale: 'en' | 'ur'; config
 async function CityPopular({ locale, citySlug, cityName }: { locale: 'en' | 'ur'; citySlug?: string; cityName: string }) {
   if (!citySlug) return null;
   const t = await getTranslations({ locale, namespace: 'browse' });
+  const tc = await getTranslations({ locale, namespace: 'common' });
   const [vehicles, property, jobs] = await Promise.all([
     latestAds({ limit: 4, model: 'vehicles', citySlug }),
     latestAds({ limit: 4, model: 'property', citySlug }),
@@ -524,7 +514,7 @@ async function CityPopular({ locale, citySlug, cityName }: { locale: 'en' | 'ur'
               <div className="mb-2 flex items-center justify-between">
                 <h3 className="font-bold">{cat ? named(cat, locale) : c.title}</h3>
                 <Link href={c.href} className="text-sm text-brand hover:underline">
-                  {t('next')}
+                  {tc('viewAll')}
                 </Link>
               </div>
               <ul className="grid grid-cols-2 gap-2">

@@ -36,10 +36,11 @@ export type MetaCity = {
 };
 
 export type PaymentAccounts = {
-  jazzcash?: { title: string | null; number: string | null };
-  easypaisa?: { title: string | null; number: string | null };
-  nayapay?: { title: string | null; number: string | null };
-  bank?: { bank_name: string | null; title: string | null; account: string | null; iban: string | null };
+  // enabled: false = number kept in admin but hidden from customers (missing = shown)
+  jazzcash?: { title: string | null; number: string | null; enabled?: boolean };
+  easypaisa?: { title: string | null; number: string | null; enabled?: boolean };
+  nayapay?: { title: string | null; number: string | null; enabled?: boolean };
+  bank?: { bank_name: string | null; title: string | null; account: string | null; iban: string | null; enabled?: boolean };
 };
 
 export type Meta = {
@@ -93,9 +94,9 @@ export async function loadMeta(): Promise<Meta> {
 /** Which payment methods have account details filled in. */
 export function availableMethods(acc: PaymentAccounts): ('jazzcash' | 'easypaisa' | 'nayapay' | 'bank')[] {
   const out: ('jazzcash' | 'easypaisa' | 'nayapay' | 'bank')[] = [];
-  if (acc.jazzcash?.number) out.push('jazzcash');
-  if (acc.easypaisa?.number) out.push('easypaisa');
-  if (acc.nayapay?.number) out.push('nayapay');
-  if (acc.bank?.account || acc.bank?.iban) out.push('bank');
+  if (acc.jazzcash?.number && acc.jazzcash.enabled !== false) out.push('jazzcash');
+  if (acc.easypaisa?.number && acc.easypaisa.enabled !== false) out.push('easypaisa');
+  if (acc.nayapay?.number && acc.nayapay.enabled !== false) out.push('nayapay');
+  if ((acc.bank?.account || acc.bank?.iban) && acc.bank.enabled !== false) out.push('bank');
   return out;
 }
