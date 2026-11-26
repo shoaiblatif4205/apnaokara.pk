@@ -7,6 +7,7 @@ import { Notice, PageHeader, Section } from '@/components/admin/ui';
 import { SubmitButton } from '@/components/admin/SubmitButton';
 import { CopyButton } from '@/components/admin/CopyButton';
 import { boostDone } from '../listings/actions';
+import { SITE_URL } from '@/lib/seo';
 
 export const metadata = { title: 'WhatsApp Boost' };
 
@@ -23,7 +24,7 @@ export default async function BoostQueue(props: { searchParams: Promise<{ saved?
         and not exists (select 1 from payments p where p.listing_id = l.id and p.status = 'pending' and p.items @> '[{"key":"whatsapp_boost"}]')
       order by l.approved_at`,
   );
-  const site = process.env.NEXT_PUBLIC_SITE_URL || 'https://apnaokara.pk';
+  const site = SITE_URL;
   return (
     <>
       <PageHeader title="WhatsApp Boost" description="Paid ads waiting to be posted in the WhatsApp group and Facebook page. Copy the post, share it, then press Done." />

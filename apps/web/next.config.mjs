@@ -12,7 +12,7 @@ const csp = [
   "img-src 'self' data: blob: https://*.supabase.co https://www.googletagmanager.com https://*.google-analytics.com",
   "font-src 'self' data:",
   `connect-src 'self' https://*.supabase.co https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com${dev ? ' ws: http://localhost:*' : ''}`,
-  "frame-src 'none'",
+  "frame-src https://www.googletagmanager.com",
   "frame-ancestors 'none'",
   "object-src 'none'",
   "base-uri 'self'",
@@ -42,6 +42,9 @@ const nextConfig = {
       { source: '/admin/:path*', headers: [{ key: 'Cache-Control', value: 'private, no-store' }, { key: 'X-Robots-Tag', value: 'noindex, nofollow' }] },
       { source: '/api/rishta/:path*', headers: [{ key: 'Cache-Control', value: 'private, no-store' }] },
     ];
+  },
+  async rewrites() {
+    return [{ source: '/.well-known/assetlinks.json', destination: '/api/assetlinks' }];
   },
   // The shared package is TypeScript source; Next compiles it.
   transpilePackages: ['@apna-okara/shared'],

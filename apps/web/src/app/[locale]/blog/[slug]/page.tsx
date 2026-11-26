@@ -11,8 +11,9 @@ import { named } from '@/lib/format';
 import { Breadcrumbs } from '@/components/browse/Breadcrumbs';
 import { AdCard } from '@/components/browse/AdCard';
 import { BlogCard, formatPostDate } from '@/components/blog/BlogCard';
+import { SITE_URL } from '@/lib/seo';
 
-const site = process.env.NEXT_PUBLIC_SITE_URL || 'https://apnaokara.pk';
+const site = SITE_URL;
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
 export async function generateMetadata(props: Props): Promise<Metadata> {

@@ -14,9 +14,9 @@ import { ProviderInfo, ProviderReviews } from '@/components/browse/ProviderProfi
 // Keys shown in the provider info block instead of the generic details table
 const PROFILE_KEYS = ['experience_years', 'areas_served', 'timings', 'address', 'map_link', 'website', 'starting_rate'];
 import { Link, type AppLocale } from '@/i18n/routing';
-import { fill, getSeo, ld } from '@/lib/seo';
+import { fill, getSeo, ld, SITE_URL } from '@/lib/seo';
 
-const site = process.env.NEXT_PUBLIC_SITE_URL || 'https://apnaokara.pk';
+const site = SITE_URL;
 const refFrom = (slug: string) => slug.match(/(AO-\d{4,10})$/i)?.[1]?.toUpperCase() ?? null;
 
 export async function generateMetadata(props: { params: Promise<{ locale: string; slug: string }> }): Promise<Metadata> {

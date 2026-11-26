@@ -10,6 +10,7 @@ import { statusBadge } from '@/components/admin/status';
 import { REVIEW_SELECT, ReviewItem, type ReviewRow } from '@/components/admin/ReviewItem';
 import { setVerified } from '../../reviews/actions';
 import { RECEIPT_COLS, RECEIPT_JOIN, ReceiptCheck, type ReceiptCols } from '@/components/admin/ReceiptCheck';
+import { SITE_URL } from '@/lib/seo';
 import {
   approveListing,
   blockPhone,
@@ -119,7 +120,7 @@ export default async function ListingDetail(props: { params: Promise<{ id: strin
       [ad.id],
     ),
   ]);
-  const site = process.env.NEXT_PUBLIC_SITE_URL || 'https://apnaokara.pk';
+  const site = SITE_URL;
   const waText = whatsappPostText({
     title: ad.title,
     price: ad.price,

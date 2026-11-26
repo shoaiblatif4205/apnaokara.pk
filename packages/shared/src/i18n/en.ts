@@ -107,7 +107,7 @@ export const en = {
     takePhoto: 'Take photo',
     removePhoto: 'Remove photo',
     photosRequired: 'Add at least one photo.',
-    photoTooBig: 'A photo is too big (max 10 MB).',
+    photoTooBig: 'This photo could not be sent. Please try another photo or take a screenshot of it.',
     yourName: 'Your name',
     phone: 'Phone number',
     phoneHint: 'Pakistani mobile, e.g. 0300 1234567',

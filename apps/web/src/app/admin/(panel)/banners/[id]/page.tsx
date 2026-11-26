@@ -7,6 +7,7 @@ import { BANNER_PLACEMENTS, PLACEMENT_INFO, type Placement } from '@/lib/bannerC
 import { Badge, Field, Notice, PageHeader, Section } from '@/components/admin/ui';
 import { SubmitButton } from '@/components/admin/SubmitButton';
 import { approveBanner, extendBanner, rejectBanner, saveBanner, setBannerStatus } from '../actions';
+import { SITE_URL } from '@/lib/seo';
 
 export const metadata = { title: 'Banner' };
 
@@ -34,7 +35,7 @@ export default async function BannerDetail(props: { params: Promise<{ id: string
     q<{ id: number; name_en: string }>('select id, name_en from cities where is_active order by sort_order'),
     q<{ id: number; name_en: string }>('select id, name_en from categories where parent_id is null and is_active order by sort_order'),
   ]);
-  const site = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const site = SITE_URL;
 
   return (
     <>

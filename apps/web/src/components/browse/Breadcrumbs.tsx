@@ -1,8 +1,8 @@
 import { ChevronRight } from 'lucide-react';
 import { Link } from '@/i18n/routing';
-import { ld } from '@/lib/seo';
+import { ld, SITE_URL } from '@/lib/seo';
 
-const site = process.env.NEXT_PUBLIC_SITE_URL || 'https://apnaokara.pk';
+const site = SITE_URL;
 
 /** Breadcrumb trail + BreadcrumbList structured data. Last item is the current page. */
 export function Breadcrumbs({ items, locale }: { items: { label: string; href: string }[]; locale: 'en' | 'ur' }) {

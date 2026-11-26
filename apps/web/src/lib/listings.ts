@@ -10,7 +10,7 @@ import {
   slugify,
 } from '@apna-okara/shared';
 import { q, q1, tx } from '@/lib/db';
-import { BadImageError, processPhoto } from '@/lib/images';
+import { BadImageError, processAdPhoto, processPhoto } from '@/lib/images';
 import { availableMethods, loadMeta, type MetaField } from '@/lib/meta';
 import { normalizePhone } from '@/lib/phone';
 import { saveObject } from '@/lib/storage';
@@ -185,12 +185,12 @@ export async function createListing(form: FormData): Promise<{ reference: string
   const screenshot = isUpload(shotRaw) && shotRaw.size > 0 ? shotRaw : null;
   if (needsPayment && !screenshot) throw new UserError('payment', 'Add the payment screenshot');
   for (const f of [...photos, ...(screenshot ? [screenshot] : [])]) {
-    if (f.size > MAX_PHOTO_BYTES) throw new UserError('photo_size', 'A photo is too big (max 10 MB)');
+    if (f.size > MAX_PHOTO_BYTES) throw new UserError('photo_size', 'A photo is too big (max 50 MB)');
   }
   let processed: Buffer[];
   let shot: Buffer | null = null;
   try {
-    processed = await Promise.all(photos.map(async (f) => processPhoto(Buffer.from(await f.arrayBuffer()))));
+    processed = await Promise.all(photos.map(async (f) => processAdPhoto(Buffer.from(await f.arrayBuffer()))));
     if (needsPayment && screenshot) shot = await processPhoto(Buffer.from(await screenshot.arrayBuffer()), 2000);
   } catch (e) {
     if (e instanceof BadImageError) throw new UserError('photo_type', 'Only photos (JPG, PNG, WebP, HEIC) can be uploaded');
@@ -403,7 +403,7 @@ export async function myAdAction(form: FormData): Promise<void> {
       if (!availableMethods(meta.paymentAccounts).includes(payment.method)) throw new UserError('payment', 'This payment method is not available');
       const shot: unknown = form.get('screenshot');
       if (!isUpload(shot) || shot.size === 0) throw new UserError('payment', 'Add the payment screenshot');
-      if (shot.size > MAX_PHOTO_BYTES) throw new UserError('photo_size', 'Screenshot is too big (max 10 MB)');
+      if (shot.size > MAX_PHOTO_BYTES) throw new UserError('photo_size', 'Screenshot is too big (max 50 MB)');
       try {
         const buf = await processPhoto(Buffer.from(await shot.arrayBuffer()), 2000);
         await assertNewPayment(payment.method, payment.transactionId, buf, { fileTime: form.get('screenshotTime') });
@@ -462,7 +462,7 @@ export async function myAdAction(form: FormData): Promise<void> {
       if (!availableMethods(meta.paymentAccounts).includes(payment.method)) throw new UserError('payment', 'This payment method is not available');
       const shot: unknown = form.get('screenshot');
       if (!isUpload(shot) || shot.size === 0) throw new UserError('payment', 'Add the payment screenshot');
-      if (shot.size > MAX_PHOTO_BYTES) throw new UserError('photo_size', 'Screenshot is too big (max 10 MB)');
+      if (shot.size > MAX_PHOTO_BYTES) throw new UserError('photo_size', 'Screenshot is too big (max 50 MB)');
       try {
         const buf = await processPhoto(Buffer.from(await shot.arrayBuffer()), 2000);
         await assertNewPayment(payment!.method, payment!.transactionId, buf, { fileTime: form.get('screenshotTime') });

@@ -26,6 +26,9 @@ export async function saveSeo(fd: FormData) {
   const bing = optStr(fd, 'bing_verification');
   const ga = optStr(fd, 'ga4_id')?.toUpperCase() ?? null;
   if (ga && !/^G-[A-Z0-9]{4,16}$/.test(ga)) back('Google Analytics ID looks like G-XXXXXXXXXX.');
+  // The GTM code, or the whole pasted snippet: keep only GTM-XXXXXXX
+  const gtm = optStr(fd, 'gtm_id')?.toUpperCase().match(/GTM-[A-Z0-9]{4,12}/)?.[0] ?? null;
+  if (optStr(fd, 'gtm_id') && !gtm) back('Google Tag Manager ID looks like GTM-XXXXXXX.');
   // People often paste the whole <meta> tag: keep only the code
   const code = (v: string | null) => (v ? (v.match(/content=["']([^"']+)["']/)?.[1] ?? v).trim().slice(0, 100) : null);
   const value: SeoSettings = {
@@ -36,6 +39,7 @@ export async function saveSeo(fd: FormData) {
     gsc_verification: code(gsc),
     bing_verification: code(bing),
     ga4_id: ga,
+    gtm_id: gtm,
     index_empty_city_pages: bool(fd, 'index_empty_city_pages'),
   };
   await setSetting('seo', value);

@@ -7,7 +7,7 @@ import { slugify } from '@apna-okara/shared';
 import { q, q1, tx } from '@/lib/db';
 import { requireAdmin } from '@/lib/admin/auth';
 import { logActivity } from '@/lib/admin/log';
-import { processPhoto } from '@/lib/images';
+import { processAdPhoto } from '@/lib/images';
 import { getCategories, getCities } from '@/lib/public';
 import { getSetting } from '@/lib/settings';
 import { saveObject } from '@/lib/storage';
@@ -37,7 +37,7 @@ export async function importSamples() {
       if (!cat || !city) throw new Error('category or city not found');
       const res = await fetch(`https://images.pexels.com/photos/${a.photo}/pexels-photo-${a.photo}.jpeg?auto=compress&cs=tinysrgb&w=1400`);
       if (!res.ok) throw new Error(`photo ${res.status}`);
-      const img = await processPhoto(Buffer.from(await res.arrayBuffer()));
+      const img = await processAdPhoto(Buffer.from(await res.arrayBuffer()));
       const provider = cat.model === 'services' || cat.model === 'business';
       const days = 30; // samples always end after 30 days
       await tx(async (c) => {

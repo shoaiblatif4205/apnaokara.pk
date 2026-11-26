@@ -22,14 +22,3 @@ export function ScreenHeader({ title }: { title?: string }) {
   );
 }
 
-/** Simple centred message for screens built in later phases. */
-export function ComingSoon() {
-  const { t } = useI18n();
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: spacing.xl }}>
-      <AppText size={18} bold align="center" color={colors.textMuted}>
-        {t('common.comingSoon')}
-      </AppText>
-    </View>
-  );
-}

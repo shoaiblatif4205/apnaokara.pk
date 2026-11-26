@@ -19,8 +19,14 @@ export type SeoSettings = {
   gsc_verification: string | null;
   bing_verification: string | null;
   ga4_id: string | null;
+  gtm_id: string | null; // Google Tag Manager container, GTM-XXXXXXX
   index_empty_city_pages: boolean;
 };
+
+// Apna Okara's own Google Search Console and Tag Manager codes (public values, they show in every page).
+// Used when Admin -> SEO leaves the box empty.
+const OWN_GSC = '_ckSkJLgOi0x12_4FRBv447aYpPI2d7TYxOvOZfEG1M';
+const OWN_GTM = 'GTM-KJRCRBHM';
 
 export const DEFAULT_SEO: SeoSettings = {
   templates: {
@@ -33,15 +39,22 @@ export const DEFAULT_SEO: SeoSettings = {
   ai_crawlers: 'allow',
   blocked_paths: '',
   llms_extra: '',
-  gsc_verification: null,
+  gsc_verification: OWN_GSC,
   bing_verification: null,
   ga4_id: null,
+  gtm_id: OWN_GTM,
   index_empty_city_pages: false,
 };
 
 export const getSeo = cache(async (): Promise<SeoSettings> => {
   const s = await getSetting<Partial<SeoSettings>>('seo');
-  return { ...DEFAULT_SEO, ...(s ?? {}), templates: { ...DEFAULT_SEO.templates, ...(s?.templates ?? {}) } };
+  return {
+    ...DEFAULT_SEO,
+    ...(s ?? {}),
+    templates: { ...DEFAULT_SEO.templates, ...(s?.templates ?? {}) },
+    gsc_verification: s?.gsc_verification || OWN_GSC,
+    gtm_id: s?.gtm_id || OWN_GTM,
+  };
 });
 
 /** "{category} in {city}" + values -> text. Empty parts and extra spaces are cleaned up. */

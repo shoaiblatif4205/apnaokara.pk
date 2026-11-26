@@ -50,7 +50,7 @@ export function minPhotos(model: ModelType | string): number {
 }
 
 export const MAX_PHOTOS = 8;
-export const MAX_PHOTO_BYTES = 10 * 1024 * 1024; // 10 MB before compression
+export const MAX_PHOTO_BYTES = 50 * 1024 * 1024; // safety cap only: photos are shrunk in the browser first
 
 /** Ready-made text for posting an approved ad in the WhatsApp group. */
 export function whatsappPostText(ad: { title: string; price: number | null; priceType: string; city: string; reference: string; url: string }): string {

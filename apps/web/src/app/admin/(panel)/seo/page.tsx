@@ -62,7 +62,7 @@ export default async function SeoPage(props: { searchParams: Promise<{ saved?: s
         </Section>
 
         <Section title="Google and Bing" description="From Google Search Console and Bing Webmaster Tools (choose the “HTML tag” method and paste the code or the whole tag).">
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2">
             <Field label="Google Search Console code" htmlFor="gsc_verification">
               <input id="gsc_verification" name="gsc_verification" defaultValue={seo.gsc_verification ?? ''} className="admin-input" dir="ltr" />
             </Field>
@@ -71,6 +71,9 @@ export default async function SeoPage(props: { searchParams: Promise<{ saved?: s
             </Field>
             <Field label="Google Analytics 4 ID" htmlFor="ga4_id" hint="Like G-XXXXXXXXXX. Runs only on the live site.">
               <input id="ga4_id" name="ga4_id" defaultValue={seo.ga4_id ?? ''} className="admin-input" dir="ltr" placeholder="G-" />
+            </Field>
+            <Field label="Google Tag Manager ID" htmlFor="gtm_id" hint="Like GTM-XXXXXXX. Runs only on the live site. If your Google Analytics is set up inside Tag Manager, leave the GA4 box empty so visits are not counted twice.">
+              <input id="gtm_id" name="gtm_id" defaultValue={seo.gtm_id ?? ''} className="admin-input" dir="ltr" placeholder="GTM-" />
             </Field>
           </div>
         </Section>

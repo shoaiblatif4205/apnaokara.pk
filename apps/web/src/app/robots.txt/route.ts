@@ -1,13 +1,19 @@
+import { headers as reqHeaders } from 'next/headers';
 import { AI_BOTS, getSeo, SITE_URL } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
 // robots.txt, built from Admin -> SEO. Private areas are always blocked.
 // Rishta: only the landing page (/en/rishta, /ur/rishta) may be crawled.
-// Test copies (Vercel preview, or SEO_BLOCK_ALL=1) block everything so they never get indexed.
+// Only apnaokara.pk is open to search engines. Every other address (vercel.app copies,
+// Vercel previews) blocks everything, so Google never lists a second copy of the site.
+// SEO_BLOCK_ALL=1 blocks those other addresses only; it can never hide apnaokara.pk.
 export async function GET() {
+  const host = ((await reqHeaders()).get('host') ?? '').toLowerCase().split(':')[0];
+  const mainHost = /(^|\.)apnaokara\.pk$/.test(host);
+  const local = host === 'localhost' || host === '127.0.0.1';
   const headers = { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=600' };
-  if (process.env.VERCEL_ENV === 'preview' || process.env.SEO_BLOCK_ALL === '1') {
+  if (!mainHost && (process.env.VERCEL_ENV === 'preview' || process.env.SEO_BLOCK_ALL === '1' || !local)) {
     return new Response('# Apna Okara test copy: not for search engines\nUser-agent: *\nDisallow: /\n', { headers });
   }
   const seo = await getSeo();

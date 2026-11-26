@@ -16,23 +16,145 @@
     },
     "ios": {
       "bundleIdentifier": "pk.apnaokara.app",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Take photos for your ad. / اپنے اشتہار کے لیے تصویر لیں۔",
+        "NSPhotoLibraryUsageDescription": "Choose photos for your ad. / اپنے اشتہار کے لیے تصویریں منتخب کریں۔",
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "pk.apnaokara.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#15803D"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA"
+      ],
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ],
+          "data": [
+            {
+              "scheme": "https",
+              "host": "apnaokara.pk",
+              "pathPrefix": "/ur/ad/"
+            },
+            {
+              "scheme": "https",
+              "host": "apnaokara.pk",
+              "pathPrefix": "/en/ad/"
+            },
+            {
+              "scheme": "https",
+              "host": "apnaokara.pk",
+              "pathPrefix": "/ur/post-ad"
+            },
+            {
+              "scheme": "https",
+              "host": "apnaokara.pk",
+              "pathPrefix": "/en/post-ad"
+            },
+            {
+              "scheme": "https",
+              "host": "apnaokara.pk",
+              "pathPrefix": "/ur/my-ad"
+            },
+            {
+              "scheme": "https",
+              "host": "apnaokara.pk",
+              "pathPrefix": "/en/my-ad"
+            },
+            {
+              "scheme": "https",
+              "host": "apnaokara.pk",
+              "pathPrefix": "/ur/rishta"
+            },
+            {
+              "scheme": "https",
+              "host": "apnaokara.pk",
+              "pathPrefix": "/en/rishta"
+            },
+            {
+              "scheme": "https",
+              "host": "www.apnaokara.pk",
+              "pathPrefix": "/ur/ad/"
+            },
+            {
+              "scheme": "https",
+              "host": "www.apnaokara.pk",
+              "pathPrefix": "/en/ad/"
+            },
+            {
+              "scheme": "https",
+              "host": "www.apnaokara.pk",
+              "pathPrefix": "/ur/post-ad"
+            },
+            {
+              "scheme": "https",
+              "host": "www.apnaokara.pk",
+              "pathPrefix": "/en/post-ad"
+            },
+            {
+              "scheme": "https",
+              "host": "www.apnaokara.pk",
+              "pathPrefix": "/ur/my-ad"
+            },
+            {
+              "scheme": "https",
+              "host": "www.apnaokara.pk",
+              "pathPrefix": "/en/my-ad"
+            },
+            {
+              "scheme": "https",
+              "host": "www.apnaokara.pk",
+              "pathPrefix": "/ur/rishta"
+            },
+            {
+              "scheme": "https",
+              "host": "www.apnaokara.pk",
+              "pathPrefix": "/en/rishta"
+            }
+          ]
+        }
+      ]
     },
     "plugins": [
       "expo-router",
       "expo-font",
       "expo-secure-store",
-      ["expo-notifications", { "icon": "./assets/notification-icon.png", "color": "#15803D" }]
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#15803D"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Choose photos for your ad. / اپنے اشتہار کے لیے تصویریں منتخب کریں۔",
+          "cameraPermission": "Take photos for your ad. / اپنے اشتہار کے لیے تصویر لیں۔",
+          "microphonePermission": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": false
+    },
+    "extra": {
+      "router": {
+        "origin": "https://apnaokara.pk"
+      }
     }
   }
 }

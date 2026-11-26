@@ -20,7 +20,7 @@ const urdu = Noto_Nastaliq_Urdu({
   display: 'swap',
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://apnaokara.pk';
+const siteUrl = SITE_URL;
 
 // Every page is built when it is opened (fresh ads, prices and settings; the build never needs the database).
 export const dynamic = 'force-dynamic';
@@ -112,12 +112,29 @@ export default async function LocaleLayout({
       },
     ],
   };
+  const live = process.env.NODE_ENV === 'production';
+  const gtm = seo.gtm_id && /^GTM-[A-Z0-9]{4,12}$/.test(seo.gtm_id) && live ? seo.gtm_id : null;
   const ga = seo.ga4_id && /^G-[A-Z0-9]{4,16}$/.test(seo.ga4_id) && process.env.NODE_ENV === 'production' ? seo.ga4_id : null;
 
   return (
     <html lang={locale} dir={dir(locale as AppLocale)} className={`${inter.variable} ${urdu.variable}`}>
+      <head>
+        {/* Google Tag Manager (live site only) */}
+        {gtm && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtm}');`,
+            }}
+          />
+        )}
+      </head>
       <body className="flex min-h-screen flex-col">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld(siteLd) }} />
+        {gtm && (
+          <noscript>
+            <iframe src={`https://www.googletagmanager.com/ns.html?id=${gtm}`} height="0" width="0" style={{ display: 'none', visibility: 'hidden' }} title="Google Tag Manager" />
+          </noscript>
+        )}
         {ga && (
           <>
             <script async src={`https://www.googletagmanager.com/gtag/js?id=${ga}`} />
