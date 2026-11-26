@@ -123,6 +123,7 @@ export async function Footer({ locale }: { locale: AppLocale }) {
           <FLink href="/about">{tf('aboutUs')}</FLink>
           <FLink href="/contact">{tf('contact')}</FLink>
           <FLink href="/how-it-works">{tf('howItWorks')}</FLink>
+          <FLink href="/my-ad">{tc('myAds')}</FLink>
           <FLink href="/pricing">{tf('pricing')}</FLink>
           <FLink href="/advertise">{tc('advertise')}</FLink>
           <FLink href="/blog">{tf('blog')}</FLink>

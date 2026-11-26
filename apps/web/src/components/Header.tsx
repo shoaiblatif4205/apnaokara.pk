@@ -1,4 +1,4 @@
-import { BookOpen, Download, Heart, Megaphone, Plus, Search } from 'lucide-react';
+import { BookOpen, Download, FileText, Heart, Megaphone, Plus, Search } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { isFreeNow, type FreeModeSettings } from '@apna-okara/shared';
 import { Link, type AppLocale } from '@/i18n/routing';
@@ -89,8 +89,9 @@ export async function Header({ locale }: { locale: AppLocale }) {
             <Link href="/saved" className="inline-flex min-h-[44px] items-center px-2 text-ink-muted hover:text-brand" aria-label={tb('favourites')}>
               <Heart size={20} aria-hidden="true" />
             </Link>
-            <Link href="/my-ad" className="hidden min-h-[44px] items-center px-2 text-sm font-medium text-ink-muted hover:text-brand sm:inline-flex">
-              {tc('myAds')}
+            <Link href="/my-ad" className="inline-flex min-h-[44px] items-center gap-1 px-2 text-sm font-medium text-ink-muted hover:text-brand" aria-label={tc('myAds')}>
+              <FileText size={20} aria-hidden="true" className="sm:hidden" />
+              <span className="hidden sm:inline">{tc('myAds')}</span>
             </Link>
             <Link href="/post-ad" className="btn-accent">
               <Plus size={18} aria-hidden="true" />
