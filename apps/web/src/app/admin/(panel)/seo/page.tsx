@@ -75,6 +75,9 @@ export default async function SeoPage(props: { searchParams: Promise<{ saved?: s
             <Field label="Google Tag Manager ID" htmlFor="gtm_id" hint="Like GTM-XXXXXXX. Runs only on the live site. If your Google Analytics is set up inside Tag Manager, leave the GA4 box empty so visits are not counted twice.">
               <input id="gtm_id" name="gtm_id" defaultValue={seo.gtm_id ?? ''} className="admin-input" dir="ltr" placeholder="GTM-" />
             </Field>
+            <Field label="Meta (Facebook) Pixel ID" htmlFor="meta_pixel_id" hint="The long number from Meta Events Manager. You can also paste the whole Pixel code. Runs only on the live site.">
+              <input id="meta_pixel_id" name="meta_pixel_id" defaultValue={seo.meta_pixel_id ?? ''} className="admin-input" dir="ltr" />
+            </Field>
           </div>
         </Section>
 

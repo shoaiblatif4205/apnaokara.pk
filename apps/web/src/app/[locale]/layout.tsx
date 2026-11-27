@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { Inter, Noto_Nastaliq_Urdu } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
+import { MetaPixelPageView } from '@/components/MetaPixelPageView';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { brand, dir } from '@apna-okara/shared';
 import { routing, type AppLocale } from '@/i18n/routing';
@@ -115,6 +116,7 @@ export default async function LocaleLayout({
   };
   const live = process.env.NODE_ENV === 'production';
   const gtm = seo.gtm_id && /^GTM-[A-Z0-9]{4,12}$/.test(seo.gtm_id) && live ? seo.gtm_id : null;
+  const pixel = seo.meta_pixel_id && /^\d{10,20}$/.test(seo.meta_pixel_id) && live ? seo.meta_pixel_id : null;
   const ga = seo.ga4_id && /^G-[A-Z0-9]{4,16}$/.test(seo.ga4_id) && process.env.NODE_ENV === 'production' ? seo.ga4_id : null;
 
   return (
@@ -128,6 +130,14 @@ export default async function LocaleLayout({
             }}
           />
         )}
+        {/* Meta Pixel (live site only). Page changes inside the site are sent by <MetaPixelPageView>. */}
+        {pixel && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${pixel}');fbq('track','PageView');`,
+            }}
+          />
+        )}
       </head>
       <body className="flex min-h-screen flex-col">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: ld(siteLd) }} />
@@ -136,6 +146,13 @@ export default async function LocaleLayout({
             <iframe src={`https://www.googletagmanager.com/ns.html?id=${gtm}`} height="0" width="0" style={{ display: 'none', visibility: 'hidden' }} title="Google Tag Manager" />
           </noscript>
         )}
+        {pixel && (
+          <noscript>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img height="1" width="1" style={{ display: 'none' }} alt="" src={`https://www.facebook.com/tr?id=${pixel}&ev=PageView&noscript=1`} />
+          </noscript>
+        )}
+        {pixel && <MetaPixelPageView />}
         {ga && (
           <>
             <script async src={`https://www.googletagmanager.com/gtag/js?id=${ga}`} />

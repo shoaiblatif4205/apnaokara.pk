@@ -28,6 +28,10 @@ export async function saveSeo(fd: FormData) {
   if (ga && !/^G-[A-Z0-9]{4,16}$/.test(ga)) back('Google Analytics ID looks like G-XXXXXXXXXX.');
   // The GTM code, or the whole pasted snippet: keep only GTM-XXXXXXX
   const gtm = optStr(fd, 'gtm_id')?.toUpperCase().match(/GTM-[A-Z0-9]{4,12}/)?.[0] ?? null;
+  // Meta Pixel: the number, or the whole pasted snippet (fbq('init', '123...'))
+  const pixelRaw = optStr(fd, 'meta_pixel_id');
+  const pixel = pixelRaw ? (pixelRaw.match(/init['",\s]+(\d{10,20})/)?.[1] ?? pixelRaw.match(/\b\d{10,20}\b/)?.[0] ?? null) : null;
+  if (pixelRaw && !pixel) back('Meta Pixel ID is a long number, like 1762485134809407.');
   if (optStr(fd, 'gtm_id') && !gtm) back('Google Tag Manager ID looks like GTM-XXXXXXX.');
   // People often paste the whole <meta> tag: keep only the code
   const code = (v: string | null) => (v ? (v.match(/content=["']([^"']+)["']/)?.[1] ?? v).trim().slice(0, 100) : null);
@@ -40,6 +44,7 @@ export async function saveSeo(fd: FormData) {
     bing_verification: code(bing),
     ga4_id: ga,
     gtm_id: gtm,
+    meta_pixel_id: pixel,
     index_empty_city_pages: bool(fd, 'index_empty_city_pages'),
   };
   await setSetting('seo', value);

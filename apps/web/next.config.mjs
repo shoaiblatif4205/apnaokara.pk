@@ -7,11 +7,11 @@ const dev = process.env.NODE_ENV !== 'production';
 // Browser security headers for every page and file.
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ''} https://www.googletagmanager.com`,
+  `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ''} https://www.googletagmanager.com https://connect.facebook.net`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://*.supabase.co https://www.googletagmanager.com https://*.google-analytics.com",
+  "img-src 'self' data: blob: https://*.supabase.co https://www.googletagmanager.com https://*.google-analytics.com https://www.facebook.com",
   "font-src 'self' data:",
-  `connect-src 'self' https://*.supabase.co https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com${dev ? ' ws: http://localhost:*' : ''}`,
+  `connect-src 'self' https://*.supabase.co https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://www.facebook.com https://connect.facebook.net${dev ? ' ws: http://localhost:*' : ''}`,
   "frame-src https://www.googletagmanager.com",
   "frame-ancestors 'none'",
   "object-src 'none'",

@@ -20,6 +20,7 @@ export type SeoSettings = {
   bing_verification: string | null;
   ga4_id: string | null;
   gtm_id: string | null; // Google Tag Manager container, GTM-XXXXXXX
+  meta_pixel_id: string | null; // Meta (Facebook) Pixel, numbers only
   index_empty_city_pages: boolean;
 };
 
@@ -27,6 +28,7 @@ export type SeoSettings = {
 // Used when Admin -> SEO leaves the box empty.
 const OWN_GSC = '_ckSkJLgOi0x12_4FRBv447aYpPI2d7TYxOvOZfEG1M';
 const OWN_GTM = 'GTM-KJRCRBHM';
+const OWN_PIXEL = '1762485134809407';
 
 export const DEFAULT_SEO: SeoSettings = {
   templates: {
@@ -43,6 +45,7 @@ export const DEFAULT_SEO: SeoSettings = {
   bing_verification: null,
   ga4_id: null,
   gtm_id: OWN_GTM,
+  meta_pixel_id: OWN_PIXEL,
   index_empty_city_pages: false,
 };
 
@@ -54,6 +57,7 @@ export const getSeo = cache(async (): Promise<SeoSettings> => {
     templates: { ...DEFAULT_SEO.templates, ...(s?.templates ?? {}) },
     gsc_verification: s?.gsc_verification || OWN_GSC,
     gtm_id: s?.gtm_id || OWN_GTM,
+    meta_pixel_id: s?.meta_pixel_id || OWN_PIXEL,
   };
 });
 
