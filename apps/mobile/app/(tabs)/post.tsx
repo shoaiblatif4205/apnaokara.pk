@@ -20,6 +20,7 @@ import { Button, Chip, ChipRow, ErrorText, Input, Label } from '../../src/compon
 import { getMeta, getQuote, postListing, type LocalFile, type Meta, type PayMethod, type Quote } from '../../src/api';
 import { pickPhotos, takePhoto } from '../../src/photos';
 import { saveAd } from '../../src/savedAds';
+import { logAdPosted } from '../../src/meta';
 import { linkMyAds, registerPush } from '../../src/push';
 
 const METHOD_LABEL: Record<PayMethod, string> = { jazzcash: 'JazzCash', easypaisa: 'Easypaisa', nayapay: 'NayaPay', bank: 'Bank transfer' };
@@ -228,6 +229,7 @@ export default function PostScreen() {
         needsPayment ? screenshot : null,
       );
       await saveAd({ reference: res.reference, phone, key: res.manageKey });
+      logAdPosted(String(categoryId ?? ''));
       setManageKey(res.manageKey ?? '');
       setReference(res.reference);
       scrollRef.current?.scrollTo({ y: 0, animated: false });

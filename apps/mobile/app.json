@@ -30,7 +30,8 @@
         "backgroundColor": "#15803D"
       },
       "permissions": [
-        "android.permission.CAMERA"
+        "android.permission.CAMERA",
+        "com.google.android.gms.permission.AD_ID"
       ],
       "blockedPermissions": [
         "android.permission.RECORD_AUDIO"
@@ -145,6 +146,19 @@
           "photosPermission": "Choose photos for your ad. / اپنے اشتہار کے لیے تصویریں منتخب کریں۔",
           "cameraPermission": "Take photos for your ad. / اپنے اشتہار کے لیے تصویر لیں۔",
           "microphonePermission": false
+        }
+      ],
+      [
+        "react-native-fbsdk-next",
+        {
+          "appID": "977906055061944",
+          "clientToken": "2d1a6313835f52e6b9fe3dd2eb92d27b",
+          "displayName": "Apna Okara",
+          "scheme": "fb977906055061944",
+          "advertiserIDCollectionEnabled": true,
+          "autoLogAppEventsEnabled": true,
+          "isAutoInitEnabled": true,
+          "iosUserTrackingPermission": false
         }
       ]
     ],
